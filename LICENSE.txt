@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2015 Semen Martynov
+Copyright (c) 2015 Semen Martynov. Copyright (c) 2015 Dedkov Sergey. Copyright (c) 2015 Abramov Anton. Copyright (c) 2015 Busarov Vladislav. Copyright (c) 2015 Patrakov Nikolay.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
