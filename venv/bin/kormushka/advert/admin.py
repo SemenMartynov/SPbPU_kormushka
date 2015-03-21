@@ -9,5 +9,6 @@ class AdvertInline(admin.StackedInline):
 class AdvertAdmin(admin.ModelAdmin):
     fields = ['title', 'text', 'date']
     inlines = [AdvertInline]
+    list_filter = ['date']
 
 admin.site.register(Advert, AdvertAdmin)
