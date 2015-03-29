@@ -61,3 +61,6 @@ target/
 *.fls
 *.out
 *.toc
+
+### Cleanup
+Django\ Instructions/
