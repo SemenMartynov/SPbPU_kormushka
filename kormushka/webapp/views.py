@@ -4,4 +4,7 @@ from django.core.context_processors import csrf
 
 def index(request):
 
-	return render(request,'index.html')
+	return render(request,'list.html', {
+		'title':'kormushka',
+		'user':auth.get_user(request),
+	})

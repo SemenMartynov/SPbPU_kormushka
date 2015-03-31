@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block login %}
+	<form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
+		<fieldset>
+
+			<!-- Username input-->
+			<div class="form-group">
+			  	<label class="col-md-4 control-label" for="username">Логин:</label>  
+			  	<div class="col-md-4">
+			  		<input id="username" name="username" type="text" class="form-control input-md">
+			 	 </div>
+			</div>
+
+			<!-- Password input-->
+			<div class="form-group">
+			  	<label class="col-md-4 control-label" for="password">Пароль:</label>
+			 	<div class="col-md-4">
+				    <input id="password" name="password" type="password" class="form-control input-md">
+				</div>
+			</div>
+			
+			<div class="col-md-6 col-md-offset-4">
+				{% if login_error %}
+			  		<label class="error">{{ login_error }}</label>
+				{% endif %}
+			</div>
+
+			<!-- Button -->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="button"></label>
+			  	<div class="col-md-4">
+			    	<button id="button" name="button" class="btn btn-inverse">Войти</button>
+			  	</div>
+			</div>
+
+		</fieldset>
+	</form>
+
+
+{% endblock %}
