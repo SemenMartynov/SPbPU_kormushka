@@ -25,5 +25,13 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
 
+    list_display = ('get_full_name', 'username', 'email', 'is_active', 'is_staff', 'is_superuser')
+
+    fieldsets = (
+    	(None, {'fields': ('username', 'password')}),
+    	('Персональная информация',{'fields':('first_name', 'last_name', 'email', 'image')}),
+    	('Права доступа',{'fields':('is_active', 'is_staff', 'is_superuser')})
+    	)
+
 admin.site.unregister(User)
 admin.site.register(CustomUser, CustomUserAdmin)
