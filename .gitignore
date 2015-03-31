@@ -64,3 +64,6 @@ target/
 
 ### Cleanup
 Django\ Instructions/
+*.sqlite3
+__pycache__
+migrations
