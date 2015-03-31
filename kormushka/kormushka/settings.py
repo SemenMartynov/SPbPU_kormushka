@@ -66,6 +66,15 @@ DATABASES = {
     }
 }
 
+#изменяем модуль аутентификации на тот, что возвращает экземпляра CustomUser вместо User.
+AUTHENTICATION_BACKENDS = (
+    'loginsys.auth_backends.CustomUserModelBackend',
+    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
+)
+
+#изменяем класс для работы с пользователями
+CUSTOM_USER_MODEL = 'loginsys.CustomUser'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
