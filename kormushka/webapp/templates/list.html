@@ -1,1 +1,13 @@
 {% extends "index.html" %}
+
+{% block userinfo %}
+	<div class="row">
+	  <div class="col-xs-4">
+	    <img src="{{user.image}}" class="img-thumbnail" alt="Изображение">
+	  </div>
+	  <div class="col-sm-6 col-md-4">  
+	    <h3>{{user.login}}</h3>
+	    <p>{{user.get_full_name}}</p>
+	  </div>
+	</div>
+{% endblock %}
