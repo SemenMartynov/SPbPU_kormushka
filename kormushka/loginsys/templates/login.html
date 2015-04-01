@@ -1,6 +1,15 @@
 {% extends "index.html" %}
 
 {% block login %}
+	{% if user.username %}
+	<div class="row ">
+		<div class="center-block">
+		<h3 class="text-center">Вы уже авторизированы как <b>{{user.username}}</b>.<br/>
+		Хотите <a  class="label label-default" href="/logout/">выйти?</a></h3>
+			
+		</div>
+	</div>
+	{% else %}
 	<form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
 		<fieldset>
 
@@ -30,12 +39,12 @@
 			<div class="form-group">
 				<label class="col-md-4 control-label" for="button"></label>
 			  	<div class="col-md-4">
-			    	<button id="button" name="button" class="btn btn-inverse">Войти</button>
+			    	<button id="button" name="button" class="btn btn-default navbar-btn">Войти</button>
 			  	</div>
 			</div>
 
 		</fieldset>
 	</form>
 
-
+	{% endif %}
 {% endblock %}

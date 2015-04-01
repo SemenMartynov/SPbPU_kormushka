@@ -26,7 +26,7 @@
             <li><a href="#">О нас</a></li>
             <li><a href="#">Контакты</a></li>
             {% if user.username %}
-              <li><a href="/logout/#">Выйти {{ user.username }}</a></li>
+              <li><a href="/logout/">Выйти {{ user.username }}</a></li>
             {% else %}
               <li><a href="/login/">Войти</a></li>
             {% endif %}
@@ -37,6 +37,7 @@
     <div class="container"> 
       {% block login %}{% endblock %}
       {% block userinfo %}{% endblock %}
+    </div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="{% static 'webapp/js/bootstrap.js' %}"></script>
