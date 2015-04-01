@@ -1,9 +1,11 @@
 {% extends "index.html" %}
 
+{% load staticfiles %}
+
 {% block userinfo %}
 	<div class="row">
 	  <div class="col-xs-4">
-	    <img src="{{user.image}}" class="img-thumbnail" alt="Изображение">
+	    <img src="{%if user.image %}{{user.image}}{% else %}{% static 'webapp/img/avatar.jpg' %}{% endif %}" class="img-thumbnail" alt="Изображение">
 	  </div>
 	  <div class="col-sm-6 col-md-4">  
 	    <h3>{{user.login}}</h3>
