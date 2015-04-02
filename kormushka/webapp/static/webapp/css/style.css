@@ -1,7 +1,19 @@
-body {
-	margin-top: 60px;
-}
+body {margin-top: 50px; font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;}
 
-.container {
-  max-width: 730px;
-}
+.container {max-width: 730px;}
+.cont { border:1px solid transparent; border-color:#ddd; padding-top: 0px;}
+.no-border{border: 0;}
+
+.purchase-name{font-weight:bold; line-height:150%; padding-left: 10px;}
+
+.no-padding{padding: 0px;}
+
+.inform{padding-top: 10px; padding-bottom: 10px;}
+
+.cost{float: right; margin-right: 20px; font-size: 120%;}
+
+.purchase{padding-left: 0px;}
+
+.date{font-size: 90%; color: #B6AF9A;}
+
+.depart{color: #999; font-size: 11px;}
