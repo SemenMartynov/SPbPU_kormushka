@@ -10,7 +10,7 @@ class Category(models.Model):
 
 #Отделы
 class Depart(models.Model):
-	name = models.CharField("Название",max_length=100,unique=True)
+	name = models.CharField("Название",max_length=100)
 	depart = models.IntegerField("Состоит в",max_length=30,default = 0)
 
 	def __str__(self):
@@ -22,7 +22,7 @@ class Purchase(models.Model):
 	user = models.ForeignKey(CustomUser, verbose_name="Пользователь")
 	depart = models.ForeignKey(Depart,verbose_name = "Отдел")
 	date = models.DateTimeField("Дата совершения",auto_now=True, blank=True)
-	cost = models.FloatField("Сумма",default = 0)
+	cost = models.IntegerField("Сумма",default = 0)
 	state = models.IntegerField("Состояние",default = 0)#оплачена или нет
 	about = models.TextField(blank=True)
 	category = models.ForeignKey(Category)

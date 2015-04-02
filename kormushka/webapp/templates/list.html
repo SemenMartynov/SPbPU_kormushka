@@ -1,29 +1,36 @@
-{% extends "index.html" %}
+{% extends "index.html" %}	<!-- наследование от главного шаблона-->
 
-{% load staticfiles %}
+{% load staticfiles %}		<!-- подключение статических файлов-->
 
-{% block userinfo %}
-	<div class="row">
+{% block userinfo %}		<!-- блок информации о пользователе-->
+	<div class="row block-info">
 	  <div class="col-xs-4">
-	    <img src="{%if user.image %}{{user.image}}{% else %}{% static 'webapp/img/avatar.jpg' %}{% endif %}" class="img-thumbnail" alt="Изображение">
+	    <img src="{%if user.image %}{{user.image}}{% else %}{% static 'webapp/img/avatar.jpg' %}{% endif %}" class="img-thumbnail no-border" alt="Изображение">
 	  </div>
 	  <div class="col-sm-6 col-md-4">  
 	    <h3>{{user.login}}</h3>
 	    <p>{{user.get_full_name}}</p>
 	  </div>
 	</div>
-{% endblock %}
+{% endblock %}				<!-- End блок информации о пользователе-->
 
+{% block form_add %}		<!-- Форма добавления покупки-->
 
-{% block form_add %}
-	<div class="panel panel-default">
-        <div class="panel-heading">Список покупок</div>
-    	<div class="panel-body">
-
-			<form class="form-horizontal" method="post" action="/addpurchase/">{% csrf_token %}
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	    <div class="panel-heading block-add">
+	      <h4 class="panel-title text-center">
+	        <br />
+	      </h4>   
+	    </div>
+    </a>
+    <div id="collapseOne" class="panel-collapse collapse">
+      	<div class="panel-body">
+        	<form class="form-horizontal" method="post" action="/addpurchase/">{% csrf_token %}
 	            <fieldset>
 
-		            <!-- Text input-->
+		            <!-- Название покупки-->
 		            <div class="form-group">
 		                <label class="col-md-3 control-label" for="name">Название:</label>  
 		                <div class="col-md-6">
@@ -31,7 +38,19 @@
 		                </div>
 		            </div>
 
-		            <!-- Text input-->
+					<!-- Тип покупки -->
+					<div class="form-group">
+					 	<label class="col-md-3 control-label" for="category">Тип покупки:</label>
+					  	<div class="col-md-6">
+					   		<select id="category" name="category" class="form-control">
+					   			{% for iter in category %}
+					   		   		<option value="{{iter.pk}}">{{iter.name}}</option>
+					   			{% endfor %}
+					    	</select>
+					  	</div>
+					</div>
+
+		            <!-- Сумма покупки-->
 		            <div class="form-group">
 		                <label class="col-md-3 control-label" for="cost">Сумма:</label>  
 		                <div class="col-md-6">
@@ -39,31 +58,49 @@
 		                </div>
 		            </div>
 
-		            <!-- Textarea -->
+					<!-- Select Basic -->
+					<div class="form-group">
+					    <label class="col-md-3 control-label" for="user-depart">Мой отдел:</label>
+					    <div class="col-md-6">
+					    	<select id="depart" name="depart" class="form-control">
+					    		{% for iter in depart %}
+					      			<option value="{{iter.depart.pk}}">{{iter.depart}}</option>
+					      		{% endfor %}
+					    	</select>
+					  	</div>
+					</div>
+
+		            <!-- Описание покупки -->
 		            <div class="form-group">
 		                <label class="col-md-3 control-label" for="about">Описание:</label>
 		                <div class="col-md-6">                     
 		                  	<textarea class="form-control" id="about" name="about"></textarea>
 		                </div>
 		            </div>
-
-		            <!-- Button -->
+		            <div class="col-md-6 col-md-offset-4">
+						{% if login_error %}
+					  		<label class="error">{{ login_error }}</label>
+						{% endif %}
+					</div>
+		            <!-- Кнопка Купить -->
 		            <div class="form-group">
 		                <label class="col-md-3 control-label" for="buy"></label>
 		                <div class="col-md-3">
 		                 	 <button id="buy" name="buy" class="btn btn-primary">Купить</button>
 		                </div>
 		            </div>
-
+		            
 		        </fieldset>
             </form>
-
-		</div>
-         
-      
+     	</div>
     </div>
+  </div>
+</div>
 
-       {% for iter in purchase %}
+{% endblock %}					<!-- End Форма добавления покупки-->
+
+{% block list-purchase %}		<!-- Блок покупки-->
+       {% for iter in purchase reversed %}
         <!--purchase block-->   
         <hr />     
         <div class="row">
@@ -87,13 +124,32 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-8"><a href="#">show members(24)</a>, категория</div>
+              <div class="col-sm-8"><a data-toggle="modal" data-target="#myModal" href="#">show members(24)</a>, {{iter.category}}</div>
             </div>
 
             <div class="row">
-              <div class="col-sm-8"><span class="depart">Отдел</span></div>
+              <div class="col-sm-8"><span class="depart">{{iter.depart}}</span></div>
             </div>
           </div>
         </div>
 		{% endfor %}
-{% endblock %}
+
+		<!-- Модальное окно списка участников покупки -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Участники покупки:</h4>
+		      </div>
+		      <div class="modal-body">
+		        ...
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- End Модальное окно списка участников покупки-->
+{% endblock %} <!-- End Блок покупки-->
