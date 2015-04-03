@@ -1,5 +1,11 @@
  \documentclass{beamer}
 
+\newlength{\wideitemsep}
+\setlength{\wideitemsep}{\itemsep}
+\addtolength{\wideitemsep}{10pt}
+\let\olditem\item
+\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{cmap}
@@ -73,6 +79,8 @@
 \item появились отделы и лимиты
 \item исчез внешний сервис (теперь мы работам в корпоративной сети)
 \end{itemize}
+\bigskip
+Задача: ведение базы трат и формирование подробных отчётов.
 
 \end{frame}
 
@@ -117,8 +125,8 @@
 \begin{itemize}
 \item Большой объём задач по текущему семестру (особенно защита информации).
 \item Большой объем задач с предыдущего семестра.
-\item Ощутимый порог вхождения в Django (WSGI, LDAP и т.д.).
-\item Технические проблемы: У Влада сгорел винчестер.
+\item Ощутимый порог вхождения (Django, WSGI, LDAP и даже некоторые моменты работы с git).
+\item Технические проблемы: у Влада сгорел винчестер.
 \end{itemize}
 
 
@@ -147,8 +155,8 @@
 Протоколы каждой встречи хранятся на wiki проекта.
 
 \begin{itemize}
-\item 10/III - заказчику было предложено 3 концепта (мобильное приложение, внешний веб-сервис, плагин к RedMine)
-\item 17/III (Skype) - пересмотрен принцип групп, введена идея интеграции с LDAP.
+\item 10/III - заказчику было предложено 3 концепта (мобильное приложение с p2p обменом, внешний веб-сервис, плагин к RedMine). Был выбран промежуточный вариант между первым и вторым.
+\item 17/III (Skype) - пересмотрен принцип групп, появилась идея интеграции с LDAP.
 \item 23/III - общение в формате вопрос-ответ. Проведено уточнение множества важных деталей.
 \end{itemize}
 
@@ -162,7 +170,19 @@
 \begin{frame}
 \frametitle{Тестирование}
 
+Используется Jenkins CI (ver. 1.607) и плагины:
 
+\begin{itemize}
+\item Cobertura Plugin (Покрытие кода).
+\item Violations Plugin (Отчеты о коде — pylint, pyflakes, pep8).
+\item GitHub API Plugin (получение кода из репозитория).
+\end{itemize}
+
+
+\begin{figure}
+\includegraphics[scale=0.25]{res/r2_jenkins}
+\caption{Jenkins - continuous integration}
+\end{figure}
 
 \end{frame}
 
@@ -173,6 +193,14 @@
 \begin{frame}
 \frametitle{Документирование}
 
+Планируется введение Doxygen.
+
+На данный момент схемы (svg) и статьи в wiki.
+
+\begin{figure}
+\includegraphics[scale=0.60]{res/r2_kormushka_ext}
+\caption{Пример используемой схемы: внешняя архитектура}
+\end{figure}
 
 
 \end{frame}
