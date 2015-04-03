@@ -1,14 +1,12 @@
 {% extends "index.html" %}
 
 {% block login %}
+<div class="row block-auth">
+	<div class="center-block">
 	{% if user.username %}
-	<div class="row ">
-		<div class="center-block">
+	
 		<h3 class="text-center">Вы уже авторизированы как <b>{{user.username}}</b>.<br/>
 		Хотите <a  class="label label-default" href="/logout/">выйти?</a></h3>
-			
-		</div>
-	</div>
 	{% else %}
 	<form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
 		<fieldset>
@@ -45,6 +43,8 @@
 
 		</fieldset>
 	</form>
-
-	{% endif %}
+			
+	</div>
+  </div>
+{% endif %}
 {% endblock %}

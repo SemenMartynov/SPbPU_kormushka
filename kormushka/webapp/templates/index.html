@@ -25,12 +25,11 @@
           <ul class="nav navbar-nav">
             <li><a href="#">О нас</a></li>
             <li><a href="#">Контакты</a></li>
-            {% if user.username %}
-              <li><a href="/logout/">Выйти {{ user.username }}</a></li>
-            {% else %}
-              <li><a href="/login/">Войти</a></li>
-            {% endif %}
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a class="" href={% if user.username %} "/logout/">Выйти ({{ user.username }}) {% else %}"/login/">Войти {% endif %} </a></li>
+          </ul>
+
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -41,6 +40,7 @@
       {% block list-purchase %}{% endblock %}
     </div>
   </body>
+ 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="{% static 'webapp/js/bootstrap.js' %}"></script>
   <script src="{% static 'webapp/js/app.js' %}"></script>
