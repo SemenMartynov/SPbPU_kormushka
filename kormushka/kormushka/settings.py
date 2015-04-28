@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'webapp',
     'loginsys',
-    'django_jenkins',
+    #'django_jenkins',
 )
 
 JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
