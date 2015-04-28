@@ -24,6 +24,8 @@ body {margin-top: 50px; font-family: tahoma, arial, verdana, sans-serif, Lucida 
 
 hr {margin-top: 0px; margin-bottom: 5px;}
 
+textarea {resize: none}
+
 .block-info{margin-bottom: 10px;}
 
 .block-auth{margin-top: 30%;}
