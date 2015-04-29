@@ -101,4 +101,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/opt/myenv/kormushkadb/static/'
+STATIC_ROOT = '/opt/korm_dev/kormushka/kormushka/static/'

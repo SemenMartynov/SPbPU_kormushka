@@ -68,3 +68,4 @@ Django\ Instructions/
 __pycache__
 migrations
 .idea
+kormushka/static
