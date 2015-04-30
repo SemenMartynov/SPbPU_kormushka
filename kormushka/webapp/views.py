@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from webapp.models import Purchase,Depart,Category,PO
 from webapp.forms import PurchaseForm
 from loginsys.models import CustomUser
+from django.http import HttpResponse
+from webapp.ldap_sync import LdapSynchronizer
 import datetime
 import json
 
@@ -33,3 +35,10 @@ def addpurchase(request):
 				purchase.state = 0
 				form.save()
 	return redirect('/')
+
+def ldapSync(request):
+
+    sync = LdapSynchronizer()
+    result = sync.sync()
+
+    return HttpResponse(json.dumps({"result": result}))

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
 # Quick-start development settings - unsuitable for production
@@ -106,7 +107,9 @@ STATIC_ROOT = '/opt/korm_dev/kormushka/kormushka/static/'
 
 AUTH_INFORMATION = { 'LDAP': {
     'USERNAME_SEARCH_FILTER': '(uid={})',
+    'USERGROUP_SEARCH_FILTER': '(gidNumber={})',
     'HOST': "ldap://188.166.9.61",
     'PORT': 389,
     'BASE_DN': 'ou=people,dc=test,dc=com',
+    'GROUPS_DN': 'ou=groups,dc=test,dc=com'
 }}
