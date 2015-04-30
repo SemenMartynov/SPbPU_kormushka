@@ -76,7 +76,7 @@ DATABASES = {
 #изменяем модуль аутентификации на тот, что возвращает экземпляра CustomUser вместо User.
 AUTHENTICATION_BACKENDS = (
     'loginsys.auth_backends.CustomUserModelBackend',
-#    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
+    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
 )
 
 #изменяем класс для работы с пользователями
