@@ -75,7 +75,8 @@ DATABASES = {
 
 #изменяем модуль аутентификации на тот, что возвращает экземпляра CustomUser вместо User.
 AUTHENTICATION_BACKENDS = (
-    'loginsys.auth_backends.CustomUserModelBackend',
+    #'loginsys.auth_backends.CustomUserModelBackend',
+    'loginsys.auth_backends.LDAPBackend',
     'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
 )
 
@@ -102,3 +103,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = '/opt/korm_dev/kormushka/kormushka/static/'
+
+AUTH_INFORMATION = { 'LDAP': {
+    'USERNAME_SEARCH_FILTER': '(uid={})',
+    'HOST': "ldap://188.166.9.61",
+    'PORT': 389,
+    'BASE_DN': 'ou=people,dc=test,dc=com',
+}}
