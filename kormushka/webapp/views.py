@@ -9,7 +9,6 @@ from django.http import HttpResponse
 import datetime
 import json
 import logging
-from webapp.serializers import AllFieldsSerializer
 
 @login_required(login_url="/login/")
 def index(request):
@@ -52,7 +51,6 @@ def addpurchase(request):
 
 def getUsersByName(request):
 	name = request.POST.get('name')
-	ser = AllFieldsSerializer()
 
 	all_objects = list(CustomUser.objects.filter(last_name__icontains=name))
 	l = list()
