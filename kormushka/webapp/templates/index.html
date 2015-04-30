@@ -8,6 +8,7 @@
     {% load staticfiles %}
     <link href="{% static 'webapp/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'webapp/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'webapp/css/jquery-ui.min.css' %}" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -34,6 +35,7 @@
       </div>
     </nav>
     <div class="container cont"> 
+
       {% block login %}{% endblock %}
       {% block userinfo %}{% endblock %}
       {% block form_add%}{% endblock %}
@@ -42,7 +44,11 @@
   </body>
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="http://underscorejs.org/underscore.js"></script>
   <script src="{% static 'webapp/js/bootstrap.js' %}"></script>
   <script src="{% static 'webapp/js/app.js' %}"></script>
-  
+  <script src="{% static 'webapp/js/jquery-ui.min.js' %}"></script>
+  <script type="text/javascript">
+  var csrf_token = '{{ csrf_token }}';
+</script>
 </html>
