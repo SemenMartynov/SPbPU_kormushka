@@ -1,0 +1,181 @@
+ \documentclass{beamer}
+
+\newlength{\wideitemsep}
+\setlength{\wideitemsep}{\itemsep}
+\addtolength{\wideitemsep}{10pt}
+\let\olditem\item
+\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{cmap}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\setbeamertemplate{caption}[numbered]
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\title[Технологии разработки ПО]{Kormushka:\\финансовый микроменеджмент}
+
+\author{Black team.}
+\institute[СПб ПУ]
+{
+Санкт-Петербургский государственный политехнический университет \\
+\medskip
+\textit{https://github.com/SemenMartynov/kormushka}
+}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Содержание}
+\tableofcontents
+\end{frame}
+
+%------------------------------------------------
+\section{Команда}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Команда: распределение ролей}
+
+\begin{itemize}
+\item Мяснов Александр (Client),
+\bigskip
+\bigskip
+\item Дедков Сергей (Project Manager),
+\medskip
+\item Антон Абрамов (Lead programmer),
+\medskip
+\item Влад Бусаров (Software Engineer),
+\medskip
+\item Николай Патраков (Software Engineer),
+\medskip
+\item Семён Мартынов (Quality Assurance).
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\section{Задача}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{О проекте}
+
+
+kormushka\\ - инструмент финансового микроменеджмента на малом преприятии.
+\bigskip
+
+Основные особенности:
+\begin{itemize}
+\item Интеграция с LDAP
+\item Подробная статистика
+\item Web-интерфейс
+\item Управление с мобильного телефона
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\section{Задачи второго спринта}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Список задач второго спринта и их статус}
+
+На второй спринт ставились следующие задачи:
+\begin{itemize}
+\item Мобильный клиент (Android) -- реализована работа по REST API, работа над интерфейсом в процессе.
+\item Построение красивых графиков статистики -- нет
+\item Полное покрытие тестами -- нет
+\item Автоматически генерируемая документация -- нет
+\item Deb и (возможно) rpm пакеты с нашим приложением -- да (deb)
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Основные блоккеры}
+
+Основные проблемы, с которыми мы встретились:
+\begin{itemize}
+\item Обин из участиков команды проболел три недели.
+\item Большой объем задач нынешнего семестра.
+\end{itemize}
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Статистика использования СКВ}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Статистика использования СКВ}
+
+% Может убрать этот слайд
+
+\end{frame}
+
+%------------------------------------------------
+\section{Общение с заказчиком}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Общение с заказчиком}
+
+С заказчиком за время спринта встреч не проводилось, т.к. на данный момент фронт работ понятен и вопрос не возникает.
+
+\end{frame}
+
+%------------------------------------------------
+\section{Демонстрация результатов}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Демонстрация достигнутых результатов}
+
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Цели третьего спринта}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{План второго спринта}
+
+К концу второго спринта мы достигнем следующих результатов:
+\medskip
+\begin{itemize}
+\item Мобильный клиент (Android)
+\item Завершение работы над модулем статистики
+\item Завершение работы над тестами и генерацией документации
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+\section{Вопросы}
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Вопросы?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
