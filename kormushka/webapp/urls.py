@@ -3,5 +3,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('webapp.views',
 	url(r'^$','index'),
 	url(r'^addpurchase/$','addpurchase'),
-    url(r'^ldap-sync/$','ldapSync'),
+	url(r'^get-users-by-name/$','getUsersByName'),
+	url(r'^get-purchase-users/$','getPurchaseUsers'),
+	url(r'^ldap-sync/$','ldapSync'),
 )
