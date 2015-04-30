@@ -10,7 +10,6 @@ from webapp.ldap_sync import LdapSynchronizer
 import datetime
 import json
 import logging
-from webapp.serializers import AllFieldsSerializer
 
 @login_required(login_url="/login/")
 def index(request):
@@ -47,14 +46,13 @@ def addpurchase(request):
 				userpk = request.POST['userpk'].split(",")
 				userpk = list(set(userpk))
 				for i in userpk:
-					party = POP(user=CustomUser.objects.get(id=i), purchase=Purchase.objects.get(id=lastPurchase), depart=Depart.objects.get(id=1))
+					party = POP(user=CustomUser.objects.get(id=i), purchase=Purchase.objects.get(id=lastPurchase), depart=Depart.objects.get(id=request.POST['depart']))
 					party.save()
 
 	return redirect('/')
 
 def getUsersByName(request):
 	name = request.POST.get('name')
-	ser = AllFieldsSerializer()
 
 	all_objects = list(CustomUser.objects.filter(last_name__icontains=name))
 	l = list()
