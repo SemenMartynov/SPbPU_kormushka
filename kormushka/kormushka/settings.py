@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'webapp',
     'loginsys',
+    'rest_framework',
     #'django_jenkins',
 )
 
@@ -46,6 +47,11 @@ JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
                  'django_jenkins.tasks.run_pyflakes',
                  'django_jenkins.tasks.with_coverage',
                  'django_jenkins.tasks.django_tests',)
+				 
+REST_FRAMEWORK = {
+	'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,7 +82,7 @@ DATABASES = {
 #изменяем модуль аутентификации на тот, что возвращает экземпляра CustomUser вместо User.
 AUTHENTICATION_BACKENDS = (
     'loginsys.auth_backends.CustomUserModelBackend',
-#    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
+    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
 )
 
 #изменяем класс для работы с пользователями

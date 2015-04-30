@@ -7,6 +7,8 @@ from webapp.forms import PurchaseForm
 from loginsys.models import CustomUser
 import datetime
 import json
+from rest_framework import viewsets
+from webapp.serializers import CategorySerializer
 
 @login_required(login_url="/login/")
 def index(request):
@@ -33,3 +35,8 @@ def addpurchase(request):
 				purchase.state = 0
 				form.save()
 	return redirect('/')
+	
+# ViewSets определяют способ отображения представлений.
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
