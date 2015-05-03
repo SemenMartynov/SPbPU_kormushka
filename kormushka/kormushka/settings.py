@@ -76,7 +76,7 @@ DATABASES = {
 #изменяем модуль аутентификации на тот, что возвращает экземпляра CustomUser вместо User.
 AUTHENTICATION_BACKENDS = (
     'loginsys.auth_backends.CustomUserModelBackend',
-#    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
+    'django.contrib.auth.backends.ModelBackend',   #комментируем эту строку, для запрета доступа superuser's
 )
 
 #изменяем класс для работы с пользователями
@@ -101,4 +101,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/opt/myenv/kormushkadb/static/'
+STATIC_ROOT = '/opt/korm_dev/kormushka/kormushka/static/'
