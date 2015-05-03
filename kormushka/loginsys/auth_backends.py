@@ -1,7 +1,13 @@
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models import get_model
+try:
+    from django.apps import apps
+
+    get_model = apps.get_model
+except ImportError:
+    # Support django < 1.8
+    from django.db.models import get_model
 
 class CustomUserModelBackend(ModelBackend):
     def authenticate(self, username=None, password=None):

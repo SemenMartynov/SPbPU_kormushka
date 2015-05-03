@@ -11,7 +11,7 @@ class Category(models.Model):
 #Отделы
 class Depart(models.Model):
 	name = models.CharField("Название",max_length=100)
-	depart = models.IntegerField("Состоит в",max_length=30,default = 0)
+	depart = models.IntegerField("Состоит в",default = 0)
 
 	def __str__(self):
 		return self.name
