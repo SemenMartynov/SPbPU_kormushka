@@ -1,15 +1,23 @@
 $(document).ready(function () {
 
 $('#buy').click(function(e){
-	l = [];
-    $(".party").each(function() {l.push($(this).attr("data-pk"))});
-    if (l.length == 0) {
+	listUserId = [];
+    $(".party").each(function() {listUserId.push($(this).attr("data-user-id"))});
+    if (listUserId.length == 0) {
     	e.preventDefault();
     }
-	$('#purchase').append('<input type="hidden" name="userpk" value="' + l + '">')
+	$('#purchase').append('<input type="hidden" name="userpk" value="' + listUserId + '">')
+	
+	listDepartId = [];
+	$(".party").each(function() {listDepartId.push($(this).attr("data-depart-id"))});
+	if (listDepartId.length == 0) {
+    	e.preventDefault();
+    }
+	$('#purchase').append('<input type="hidden" name="departpk" value="' + listDepartId + '">')
 });
 
 $('.showMembers').click(function(){
+	$('#block-partner').html("");
 	data = {
 				'csrfmiddlewaretoken' : csrf_token,
 				purchaseId: $(this).attr("data-id"),
@@ -20,12 +28,16 @@ $('.showMembers').click(function(){
 			dataType: "json",
 			data: data,
             success: function( data ) {
-            	$('#block-partner').html("");
-            	_.each(data,function(el){
-            		var str = '<div class="party">' +  el.label + '</div>';
-    				$('#block-partner').append(str);
-            	}); 
-
+            	if (data == 'error'){
+            		var str = '<div class="party">Пользователь не состоит в этой покупке</div>';
+            		$('#block-partner').append(str);
+            	}
+            	else{
+            		_.each(data,function(el){
+            		var str = '<div class="party">' +  el.label + ' (' + el.depart + ')</div>';
+            		$('#block-partner').append(str);
+            		}); 
+            	}           	
          	}
         });
 	});
@@ -50,7 +62,8 @@ $(function() {
             		arr.push({
             			"value": el.label,
             			"label": el.label,
-            			"pk":el.value
+            			"userid":el.userid,
+            			"departid":el.departid,
             		});
             	});
             	response(arr);
@@ -59,7 +72,7 @@ $(function() {
       },
       minLength: 3,
       select: function( event, ui ) { //Выбор пункта
-   			var str = '<div data-pk="' + ui.item.pk + '" class="party">' +  ui.item.value + '</div>';
+   			var str = '<div data-user-id="' + ui.item.userid + '" data-depart-id="' + ui.item.departid + '" class="party">' +  ui.item.value + '</div>';
     		$('#block-partner-add').append(str);
       },
       open: function() { //открытие списка
