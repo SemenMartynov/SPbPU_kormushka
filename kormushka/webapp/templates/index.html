@@ -6,9 +6,9 @@
     <title>{% block title %} {{title}} {% endblock %}</title>
 
     {% load staticfiles %}
-    <link href="{% static 'webapp/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'webapp/css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'webapp/css/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -38,15 +38,15 @@
 
       {% block login %}{% endblock %}
       {% block layout %}{% endblock %}
-        
+
     </div>
   </body>
  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="http://underscorejs.org/underscore.js"></script>
-  <script src="{% static 'webapp/js/bootstrap.js' %}"></script>
+  <script src="{% static 'vendor/jquery-1.11.2.js' %}"></script>
+  <script src="{% static 'vendor/underscore.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.js' %}"></script>
+  <script src="{% static 'vendor/jquery-ui/jquery-ui.js' %}"></script>
   <script src="{% static 'webapp/js/app.js' %}"></script>
-  <script src="{% static 'webapp/js/jquery-ui.min.js' %}"></script>
   <script type="text/javascript">
   var csrf_token = '{{ csrf_token }}';
 </script>
