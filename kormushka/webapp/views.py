@@ -20,7 +20,7 @@ def index(request):
 	category = Category.objects.all()
 	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart, 'formadd':'collapse'}# formadd - форма добавления свернута
 	args.update(csrf(request))
-	return render(request,'profile/list.html', args)
+	return render(request,'profile/layout.html', args)
 
 #добавление покупки
 @login_required(login_url="/login/")

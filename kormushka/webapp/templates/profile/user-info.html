@@ -1,0 +1,11 @@
+{% load static from staticfiles %}		<!-- подключение статических файлов-->
+
+<div class="row block-info">
+  <div class="col-xs-4">
+    <img src="{%if user.image %}{{user.image}}{% else %}{% static 'webapp/img/avatar.jpg' %}{% endif %}" class="img-thumbnail no-border" alt="Изображение">
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <h3>{{user.login}}</h3>
+    <p>{{user.get_full_name}}</p>
+  </div>
+</div>
