@@ -18,7 +18,7 @@ def index(request):
 	purchase = Purchase.objects.filter(pop__user=request.user.pk)# список покупок, в которых участвует пользователь
 	depart = PO.objects.filter(user=request.user.pk)
 	category = Category.objects.all()
-	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart, 'formadd':'collapse'}# formadd - форма добавления свернута
+	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart}# formadd - форма добавления свернута
 	args.update(csrf(request))
 	return render(request,'profile/layout.html', args)
 
