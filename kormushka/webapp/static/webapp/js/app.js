@@ -1,4 +1,5 @@
 var App = {};
+App.currentUserId;
 
 $(document).ready(function () {
 
@@ -15,16 +16,18 @@ $(document).ready(function () {
             data: data,
             success: function( data ) {
                 if (data == 'error'){
-                    var str = '<div class="party">Пользователь не состоит в этой покупке</div>';
-                    $('#block-partner').append(str);
+                    var tempalte = '<div class="party">Пользователь не состоит в этой покупке</div>';
+                    $('#block-partner').append(tempalte);
                 }
                 else{
                     _.each(data,function(el){
-                    var str = '<div class="party">' +  el.label + ' (' + el.depart + ')</div>';
-                    $('#block-partner').append(str);
+                    var tempalte = '<div class="party">{0} ({1})</div>'.replace('{0}', el.label)
+                                                                       .replace('{1}', el.depart);
+                    $('#block-partner').append(tempalte);
                     });
                 }
             }
         });
     });
+
 })

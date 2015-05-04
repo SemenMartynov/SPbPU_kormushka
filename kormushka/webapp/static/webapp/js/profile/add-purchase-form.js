@@ -71,8 +71,20 @@ $(document).ready(function () {
         },
         minLength: 3,
         select: function( event, ui ) { //Выбор пункта
-            var str = '<div data-user-id="' + ui.item.userid + '" data-depart-id="' + ui.item.departid + '" class="party">' +  ui.item.value + '</div>';
-            $('#block-partner-add').append(str);
+            var span = '<span class="glyphicon glyphicon-remove remove-party"></span>';
+            $('#block-partner-add').children('.party[data-user-id={0}]'.replace('{0}',ui.item.userid)).remove();
+            if (ui.item.userid ==  App.currentUserId){                
+                var template = '<div data-user-id="' + ui.item.userid + '" data-depart-id="' + ui.item.departid + '" class="party">' + ui.item.value + '</div>';
+                $('#block-partner-add').prepend(template);
+            } else
+            {
+                var template = '<div data-user-id="' + ui.item.userid + '" data-depart-id="' + ui.item.departid + '" class="party">' + span +  ui.item.value + '</div>';
+                $('#block-partner-add').append(template);
+            }
+            $('#block-partner-add .remove-party').last().click(function(){
+                $(this).parent().remove();
+            });
+            
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -81,4 +93,16 @@ $(document).ready(function () {
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
         }
     });
+
+    $( "#depart" ).change(function() {
+        var UserId = App.currentUserId;
+        var selectId = $(this).children("option:selected").val();
+        var selectDepart = $(this).children("option:selected").text();
+        $('#block-partner-add').children('.party[data-user-id={0}]'.replace('{0}',UserId)).remove();
+        var template = '<div data-user-id="' + UserId + '" data-depart-id="' + selectId + '" class="party">' +  App.currentUserFullName + ' (' + selectDepart + ')</div>';
+        $('#block-partner-add').prepend(template);
+    });
+
+    
+    
 });

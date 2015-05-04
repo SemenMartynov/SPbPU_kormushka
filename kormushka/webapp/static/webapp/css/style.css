@@ -35,3 +35,5 @@ textarea {resize: none}
 	overflow-x: hidden !important;
 	max-height: 300px;
 }
+
+.remove-party{ cursor:pointer;}

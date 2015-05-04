@@ -90,3 +90,22 @@
     </div>
   </div>
 </div>
+
+<!-- Модальное окно списка участников добавляемой покупки -->
+<div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Участники покупки:</h4>
+      </div>
+      <div id="block-partner-add" class="modal-body">
+      	<div data-user-id="{{user.pk}}" data-depart-id="{{depart.0.pk}}" class="party">{{user.get_full_name}} ({{depart.0.depart}})</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Модальное окно списка участников добавляемой покупки-->
