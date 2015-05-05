@@ -5,7 +5,8 @@ urlpatterns = patterns('webapp.views',
 	url(r'^addpurchase/$','addpurchase'),
 	url(r'^get-users-by-name/$','getUsersByName'),
 	url(r'^get-purchase-users/$','getPurchaseUsers'),
-	url(r'^ldap-sync/$','ldapSync')
+	url(r'^ldap-sync/$','ldapSync'),
+	url(r'^calculation-purchase/$','calculationPurchase')
 )
 
 urlpatterns += patterns('webapp.api.depart_controller',

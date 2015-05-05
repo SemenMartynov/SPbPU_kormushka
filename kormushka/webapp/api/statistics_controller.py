@@ -12,16 +12,17 @@ from django.http import HttpResponse, Http404
 #вывод страницы пользоватедя со списком покупок, в которых он участвует
 @login_required(login_url="/login/")
 def statistics(request):
+	current_user_pk = auth.get_user(request).pk;
 	
-	UserСostsPaid = Purchase.objects.filter(user=request.user.pk, state=1).aggregate(sum=Sum('cost'))#атраты пользователя, которые оплачены
+	UserСostsPaid = Purchase.objects.filter(user=current_user_pk, state=1).aggregate(sum=Sum('cost'))#атраты пользователя, которые оплачены
 	if not UserСostsPaid['sum']: UserСostsPaid['sum'] = 0
-	UserСostsNotPaid = Purchase.objects.filter(user=request.user.pk, state=0).aggregate(sum=Sum('cost'))#атраты пользователя, которые не оплачены
+	UserСostsNotPaid = Purchase.objects.filter(user=current_user_pk, state=0).aggregate(sum=Sum('cost'))#атраты пользователя, которые не оплачены
 	if not UserСostsNotPaid['sum']: UserСostsNotPaid['sum'] = 0
-	UserСostsAll = Purchase.objects.filter(user=request.user.pk).aggregate(sum=Sum('cost'))#Затраты пользователя за весь период
+	UserСostsAll = Purchase.objects.filter(user=current_user_pk).aggregate(sum=Sum('cost'))#Затраты пользователя за весь период
 	if not UserСostsAll['sum']: UserСostsAll['sum'] = 0
 
 	#Затраты на пользователя
-	obj = Purchase.objects.annotate(amount=Count('pop__purchase')).filter(pop__user=request.user.pk)
+	obj = Purchase.objects.annotate(amount=Count('pop__purchase')).filter(pop__user=current_user_pk)
 	ForUserAll = 0
 	for i in obj:
 		ForUserAll = ForUserAll + i.cost/i.amount

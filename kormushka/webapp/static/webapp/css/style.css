@@ -40,10 +40,8 @@ textarea {resize: none}
 
 .block-auth{margin-top: 30%;}
 
-.ui-autocomplete {
-	overflow: auto;
-	overflow-x: hidden !important;
-	max-height: 300px;
-}
+.ui-autocomplete {overflow: auto; overflow-x: hidden !important; max-height: 300px;}
 
 .remove-party{ cursor:pointer;}
+
+.cost .glyphicon{top:5px !important; right: 4px; cursor:pointer;}

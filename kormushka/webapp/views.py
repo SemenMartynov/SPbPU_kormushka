@@ -78,6 +78,19 @@ def getPurchaseUsers(request):
 		return HttpResponse(json.dumps("error"))
 	raise Http404
 
+#рассчет конкретной покупки
+def calculationPurchase(request):
+	if request.is_ajax() and request.POST:
+		if CustomUser.objects.get(id=auth.get_user(request).pk).is_superuser:
+			purchaseId = request.POST.get('purchaseId')
+			purchase = Purchase.objects.filter(id = purchaseId)
+			if purchase:
+				purchase.update(state = 1)
+				return HttpResponse(json.dumps('true'))
+
+		return HttpResponse(json.dumps('false'))	
+	raise Http404
+
 def ldapSync(request):
 	if request.is_ajax() and request.POST:
 	    sync = LdapSynchronizer()
