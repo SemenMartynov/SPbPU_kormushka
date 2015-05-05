@@ -51,7 +51,7 @@ def addpurchase(request):
 						if PO.objects.filter(user=key,depart=UserInDepart[key]):	#Если такой пользователь есть в базе
 							party = POP(user=CustomUser.objects.get(id=key), purchase=Purchase.objects.get(id=lastPurchase), depart=Depart.objects.get(id=UserInDepart[key]))
 							party.save()
-	raise Http404
+	return redirect('/')
 
 #получение списка пользователей для добавлении в покупку
 def getUsersByName(request):
