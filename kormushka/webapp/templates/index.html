@@ -24,6 +24,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a href="/departs/">Группы</a></li>
             <li><a href="#">О нас</a></li>
             <li><a href="#">Контакты</a></li>
           </ul>
@@ -49,6 +50,7 @@
   <script src="{% static 'webapp/js/app.js' %}"></script>
   <script src="{% static 'webapp/js/common/validator.js' %}"></script>
   <script src="{% static 'webapp/js/profile/add-purchase-form.js' %}"></script>
+  <script src="{% static 'webapp/js/departs/view.js' %}"></script>
   <script type="text/javascript">
   var csrf_token = '{{ csrf_token }}';
   App.currentUserId = '{{ user.pk }}';
