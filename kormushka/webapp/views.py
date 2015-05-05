@@ -5,26 +5,24 @@ from django.contrib.auth.decorators import login_required
 from webapp.models import Purchase,Depart,Category,PO,POP
 from webapp.forms import PurchaseForm
 from loginsys.models import CustomUser
-from django.http import HttpResponse
+from django.http import HttpResponse,Http404
 from webapp.ldap_sync import LdapSynchronizer
+from django.db.models import Q
 import datetime
 import json
 import logging
 
+#вывод страницы пользоватедя со списком покупок, в которых он участвует
 @login_required(login_url="/login/")
 def index(request):
-	k=[]
-	l = POP.objects.filter(user=request.user.pk)
-	for i in l:
-	 	k.append(i.purchase.id)
-
-	purchase = Purchase.objects.filter(pk__in=k)
+	purchase = Purchase.objects.filter(pop__user=request.user.pk)# список покупок, в которых участвует пользователь
 	depart = PO.objects.filter(user=request.user.pk)
 	category = Category.objects.all()
-	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart, 'formadd':'collapse'}# formadd - форма добавления свернута
+	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart}# formadd - форма добавления свернута
 	args.update(csrf(request))
-	return render(request,'list.html', args)
+	return render(request,'profile/layout.html', args)
 
+#добавление покупки
 @login_required(login_url="/login/")
 def addpurchase(request):
 	args = {}
@@ -41,43 +39,48 @@ def addpurchase(request):
 				purchase.state = 0
 				form.save()
 
-
-				lastPurchase =  Purchase.objects.latest('id').pk
-				userpk = request.POST['userpk'].split(",")
-				userpk = list(set(userpk))
-				for i in userpk:
-					party = POP(user=CustomUser.objects.get(id=i), purchase=Purchase.objects.get(id=lastPurchase), depart=Depart.objects.get(id=request.POST['depart']))
-					party.save()
-
+				#Добавление записей в POP
+				lastPurchase =  Purchase.objects.latest('id').pk	#получаем id только что добавленной покупки
+				userpk = request.POST['userpk'].split(",")			#получаем список пользователей
+				departpk = request.POST['departpk'].split(",")		#получаем список отделов, в которых состоят пользователи
+				UserInDepart=dict(zip(userpk,departpk))				#выставляем соответствие: "пользователь" - "группа"
+				UserInDepart[str(auth.get_user(request).pk)] = request.POST['depart'] #добавляем самого пользователя в покупку
+				KeysUser = list(UserInDepart.keys())				#получаем список ключей - пользователей, участвующих в покупке
+				for key in KeysUser:
+					if key!='' and UserInDepart[key]!='':				#Если ключ или значения не путые
+						if PO.objects.filter(user=key,depart=UserInDepart[key]):	#Если такой пользователь есть в базе
+							party = POP(user=CustomUser.objects.get(id=key), purchase=Purchase.objects.get(id=lastPurchase), depart=Depart.objects.get(id=UserInDepart[key]))
+							party.save()
 	return redirect('/')
 
+#получение списка пользователей для добавлении в покупку
 def getUsersByName(request):
-	name = request.POST.get('name')
+	if request.is_ajax() and request.POST:
+		name = request.POST.get('name')
 
-	all_objects = list(CustomUser.objects.filter(last_name__icontains=name))
-	l = list()
-	for obj in all_objects:
-		l.append({"label": obj.get_full_name(), "value": obj.pk})
-	return HttpResponse(json.dumps(l))
+		all_objects = list(PO.objects.filter(Q(user__last_name__icontains=name) | Q(user__first_name__icontains=name) | Q(depart__name__icontains=name)))
+		UserInDepart = list()
+		for obj in all_objects:
+			UserInDepart.append({"label": obj.user.get_full_name() + ' (' + obj.depart.name + ')', "userid": obj.user.pk, "departid": obj.depart.pk})
+		return HttpResponse(json.dumps(UserInDepart))
+	raise Http404
 
+#получения списка пользователей, участвующих в совершенной покупке
 def getPurchaseUsers(request):
-	purchaseId = request.POST.get('purchaseId')
-
-	l = POP.objects.filter(purchase=Purchase.objects.get(id=purchaseId))
-	k=[]
-	for i in l:
-	 	k.append(i.user.id)
-	logger = logging.getLogger(__name__)
-	logger.warn(k)
-	user = list(CustomUser.objects.filter(pk__in=k))
-	li=list()
-	for obj in user:
-		li.append({"label": obj.get_full_name(), "pk": obj.pk})
-	return HttpResponse(json.dumps(li))		
+	if request.is_ajax() and request.POST:
+		purchaseId = request.POST.get('purchaseId')
+		if POP.objects.filter(user=auth.get_user(request).pk,purchase=purchaseId):
+			pop = POP.objects.filter(purchase=purchaseId)# список пользователей, которые участвуют в покупке
+			UserInPurchase=list()
+			for obj in pop:
+				UserInPurchase.append({"label": obj.user.get_full_name(), "pk": obj.user.pk, "depart": obj.depart.name})
+			return HttpResponse(json.dumps(UserInPurchase))
+		return HttpResponse(json.dumps("error"))
+	raise Http404
 
 def ldapSync(request):
-
-    sync = LdapSynchronizer()
-    result = sync.sync()
-
-    return HttpResponse(json.dumps({"result": result}))
+	if request.is_ajax() and request.POST:
+	    sync = LdapSynchronizer()
+	    result = sync.sync()
+	    return HttpResponse(json.dumps({"result": result}))
+	raise Http404

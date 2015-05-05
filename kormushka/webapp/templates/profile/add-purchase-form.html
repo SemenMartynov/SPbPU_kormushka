@@ -1,0 +1,111 @@
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	    <div class="panel-heading block-add">
+	      <h4 class="panel-title text-center">
+	        <br />
+	      </h4>   
+	    </div>
+    </a>
+    <div id="collapseOne" class="panel-collapse collapse">
+      	<div class="panel-body">
+        	<form class="form-horizontal" id="purchase" method="post" action="/addpurchase/">{% csrf_token %}
+	            <fieldset>
+
+		            <!-- Название покупки-->
+		            <div class="form-group">
+		                <label class="col-md-3 control-label" for="name">Название:</label>  
+		                <div class="col-md-6">
+		            	    <input id="name" name="name" type="text" class="form-control input-md">
+                        </div>
+		            </div>
+
+					<!-- Тип покупки -->
+					<div class="form-group">
+					 	<label class="col-md-3 control-label" for="category">Тип покупки:</label>
+					  	<div class="col-md-6">
+					   		<select id="category" name="category" class="form-control">
+					   			{% for iter in category %}
+					   		   		<option value="{{iter.pk}}">{{iter.name}}</option>
+					   			{% endfor %}
+					    	</select>
+					  	</div>
+					</div>
+
+		            <!-- Сумма покупки-->
+		            <div class="form-group">
+		                <label class="col-md-3 control-label" for="cost">Сумма:</label>  
+		                <div class="col-md-6">
+		                	<input id="cost" name="cost" type="text" class="form-control input-md">
+		                </div>
+		            </div>
+
+					<!-- Select Basic -->
+					<div class="form-group">
+					    <label class="col-md-3 control-label" for="depart">Мой отдел:</label>
+					    <div class="col-md-6">
+					    	<select id="depart" name="depart" class="form-control">
+					    		{% for iter in depart %}
+					      			<option value="{{iter.depart.pk}}">{{iter.depart}}</option>
+					      		{% endfor %}
+					    	</select>
+					  	</div>
+					</div>
+
+		            <!-- Описание покупки -->
+		            <div class="form-group">
+		                <label class="col-md-3 control-label" for="about">Описание:</label>
+		                <div class="col-md-6">                     
+		                  	<textarea class="form-control" id="about" name="about"></textarea>
+		                </div>
+		            </div>
+		            <div class="col-md-6 col-md-offset-4">
+						{% if login_error %}
+					  		<label class="error">{{ login_error }}</label>
+						{% endif %}
+					</div>
+
+					<!-- Участник покупки-->
+					<div class="form-group">
+					  	<label class="col-md-3 control-label" for="user-member">Участник:</label>
+					  	<div class="col-md-6 ui-widget">
+					  		<input id="user-member" name="user-member" type="text" placeholder="" class="form-control input-md">
+					  	</div>
+					</div>
+		            <!-- Кнопка Купить -->
+		            <div class="form-group">
+		                <label class="col-md-3 control-label" for="buy"></label>
+		                <div class="col-md-4">
+		                 	 <button id="buy" name="buy" class="btn btn-primary">Купить</button>
+		                </div>
+		                <div class="col-md-3">
+                            <!-- TODO: change myModalApp for something with sense -->
+		                 	 <a data-toggle="modal" data-target="#myModalAdd" href="#">Участники</a>
+		                </div>
+		            </div>
+		            
+		        </fieldset>
+            </form>
+     	</div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно списка участников добавляемой покупки -->
+<div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Участники покупки:</h4>
+      </div>
+      <div id="block-partner-add" class="modal-body">
+      	<div data-user-id="{{user.pk}}" data-depart-id="{{depart.0.pk}}" class="party">{{user.get_full_name}} ({{depart.0.depart}})</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Модальное окно списка участников добавляемой покупки-->

@@ -1,0 +1,7 @@
+{% extends "index.html" %}	<!-- наследование от главного шаблона-->
+
+{% block layout %}
+	{% include "profile/user-info.html" %}
+    {% include "profile/add-purchase-form.html" %}
+    {% include "profile/list-purchases.html" %}
+{% endblock %}
