@@ -1,0 +1,8 @@
+{% extends "index.html" %}	<!-- наследование от главного шаблона-->
+
+{% block layout %}
+<div class="row">
+	{% include "departs/departs-sidebar.html" %}
+    {% include "departs/users.html" %}
+</div>
+{% endblock %}

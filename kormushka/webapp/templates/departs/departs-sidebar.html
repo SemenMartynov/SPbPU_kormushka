@@ -1,0 +1,7 @@
+<div class="col-sm-5 col-md-3">
+    <ul id="departs-sidebar" class="nav nav-pills nav-stacked">
+        {% for d in departs %}
+            <li><a href="#" class="depart-sidebar-item" data-depart-id="{{ d.pk }}">{{ d.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

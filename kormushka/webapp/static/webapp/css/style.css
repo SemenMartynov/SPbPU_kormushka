@@ -1,8 +1,18 @@
-body {margin-top: 50px; font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;}
+body {
+    margin-top: 50px;
+    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+}
 
-.container {max-width: 730px;}
+.container {
+    max-width: 730px;
+}
 
-.cont { border:1px solid transparent; border-color:#ddd; padding-top: 0px;}
+.cont {
+    min-height: 600px;
+    border: 1px solid transparent;
+    border-color:#ddd;
+    padding-top: 10px;
+}
 
 .no-border{border: 0;}
 
