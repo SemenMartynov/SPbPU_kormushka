@@ -1,3 +1,27 @@
+<div class="container">
+    <div class="row">
+        <div class='col-sm-5'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+         <div class='col-sm-5'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker2'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" id="statistics-tab">
   <li class="active"><a href="#personal-statistics">Личная</a></li>
@@ -19,26 +43,29 @@
 		<tbody>
 			<tr>
 				<td>Оплаченные затраты</td>
-				<td>{{UserСostsPaid}}</td>
+				<td><span class="personal-costs-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Не оплаченные затраты</td>
-				<td>{{UserСostsNotPaid}}</td>
+				<td><span class="personal-costs-not-paid"></span></td>
 			</tr>
 			<tr>
-				<td>Затраты за весь период</td>
-				<td>{{UserСostsAll}}</td>
+				<td>Всего затраты</td>
+				<td><span class="personal-costs-all"></span></td>
 			</tr>
 			<tr>
 				<td>Затраты на пользователя</td>
-				<td>{{ForUserAll}}</td>
+				<td><span class="for-personal-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
   </div><!--end personal-statistics-->
 
   <div class="tab-pane fade" id="users-statistics">
-  		  <table class="table table-striped">
+  	<div class="col-md-6 ui-widget">
+  		<input id="user-stat" name="user-stat" type="text" placeholder="" class="form-control input-md">
+  	</div>
+  	<table class="table table-striped">
 	  	<thead>
 			<tr>
 				<th>Категория</th>
@@ -48,25 +75,28 @@
 		<tbody>
 			<tr>
 				<td>Оплаченные затраты</td>
-				<td>{{UserСostsPaid}}</td>
+				<td><span class="user-costs-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Не оплаченные затраты</td>
-				<td>{{UserСostsNotPaid}}</td>
+				<td><span class="user-costs-not-paid"></span></td>
 			</tr>
 			<tr>
-				<td>Затраты за весь период</td>
-				<td>{{UserСostsAll}}</td>
+				<td>Всего затраты</td>
+				<td><span class="user-costs-all"></span></td>
 			</tr>
 			<tr>
 				<td>Затраты на пользователя</td>
-				<td>{{ForUserAll}}</td>
+				<td><span class="for-user-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
   </div><!--end users-statistics-->
 
   <div class="tab-pane fade" id="departs-statistics">
+  	<div class="col-md-6 ui-widget">
+  		<input id="depart-stat" name="depart-stat" type="text" placeholder="" class="form-control input-md">
+  	</div>
   	<table class="table table-striped">
 	  	<thead>
 			<tr>
@@ -75,9 +105,21 @@
 			</tr>
 		</thead>
 		<tbody>
+			<tr>
+				<td>Оплаченные затраты</td>
+				<td><span class="depart-costs-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Не оплаченные затраты</td>
+				<td><span class="depart-costs-not-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Всего затраты</td>
+				<td><span class="depart-costs-all"></span></td>
+			</tr>
   			<tr>
 				<td>Затраты на отдел</td>
-				<td>{{ForDepartAll}}</td>
+				<td><span class="for-depart-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
@@ -95,15 +137,15 @@
 			
 			<tr>
 				<td>Сумма оплаченных покупок</td>
-				<td>{{СostsPaid}}</td>
+				<td><span class="costs-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Сумма неоплаченные покупок</td>
-				<td>{{СostsNotPaid}}</td>
+				<td><span class="costs-not-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Сумма всех покупок</td>
-				<td>{{СostsAll}}</td>
+				<td><span class="costs-all"></span></td>
 			</tr>
 		</tbody>
 	</table>

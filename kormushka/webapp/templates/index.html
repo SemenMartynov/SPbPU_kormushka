@@ -7,6 +7,7 @@
 
     {% load staticfiles %}
     <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
     <link href="{% static 'webapp/css/style.css' %}" rel="stylesheet">
     <link href="{% static 'vendor/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
   </head>
@@ -53,7 +54,12 @@
   <script src="{% static 'webapp/js/profile/add-purchase-form.js' %}"></script>
   <script src="{% static 'webapp/js/profile/list-purchases.js' %}"></script>
   <script src="{% static 'webapp/js/departs/view.js' %}"></script>
+  <script src="{% static 'vendor/moment.min.js' %}"></script>
+  <script src="{% static 'vendor/locales.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap-datetimepicker.min.js' %}"></script>
   <script src="{% static 'webapp/js/statistics/statistics.js' %}"></script>
+  
+
   <script type="text/javascript">
     var csrf_token = '{{ csrf_token }}';
     App.currentUserId = '{{ user.pk }}';

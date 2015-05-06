@@ -55,7 +55,6 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
-                console.log(data);
                 arr = [];
                 _.each(data,function(el){
                     arr.push({

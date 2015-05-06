@@ -35,7 +35,7 @@ def addpurchase(request):
 			if po:
 				purchase = form.save(commit=False)
 				purchase.user = CustomUser.objects.get(id=auth.get_user(request).pk)
-				purchase.date = datetime.datetime.now()
+				purchase.date = datetime.datetime.now().date()
 				purchase.state = 0
 				form.save()
 
@@ -53,7 +53,7 @@ def addpurchase(request):
 							party.save()
 	return redirect('/')
 
-#получение списка пользователей для добавлении в покупку
+#получение списка пользователей в автокомплите
 def getUsersByName(request):
 	if request.is_ajax() and request.POST:
 		name = request.POST.get('name')
@@ -63,6 +63,18 @@ def getUsersByName(request):
 		for obj in all_objects:
 			UserInDepart.append({"label": obj.user.get_full_name() + ' (' + obj.depart.name + ')', "userid": obj.user.pk, "departid": obj.depart.pk})
 		return HttpResponse(json.dumps(UserInDepart))
+	raise Http404
+
+#получение списка групп в автокомплите
+def getDepartByName(request):
+	if request.is_ajax() and request.POST:
+		DepartList = list()
+
+		depart = request.POST.get('depart')
+		AllDeparts = Depart.objects.filter(name__icontains=depart)
+		for obj in AllDeparts:
+			DepartList.append({"label":obj.name, "departid": obj.pk})
+		return HttpResponse(json.dumps(DepartList))
 	raise Http404
 
 #получения списка пользователей, участвующих в совершенной покупке
