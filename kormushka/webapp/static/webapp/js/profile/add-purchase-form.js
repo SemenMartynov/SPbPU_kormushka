@@ -1,5 +1,9 @@
 $(document).ready(function () {
 
+    //  select template and inner elements for work
+    var template = $("#add-purchase-form-template");
+    if (!template[0]) return;
+
     /**********
         buy click handler
     **********/

@@ -1,5 +1,11 @@
 $(document).ready(function () {
 
+    //  select template and inner elements for work
+    var template = $("#test-chart-template");
+    if (!template[0]) return;
+
+    var pieChartContainer = template.find("#test-piechart");
+
     //  http://www.chartjs.org/docs/#doughnut-pie-chart
     //  https://github.com/nnnick/Chart.js/blob/master/samples/pie.html
 
@@ -36,27 +42,29 @@ $(document).ready(function () {
         }
     ];
 
-    var ctx = $("#test-piechart")[0].getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
-    var testPieChart = new Chart(ctx);
-    testPieChart.Pie(pieData);
+    if (!!pieChartContainer) {
+        var ctx = pieChartContainer[0].getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+        var testPieChart = new Chart(ctx);
+        testPieChart.Pie(pieData);
 
 
-    //  update data if you need
-    /*
-    var newPieData = [
-        {
-            value: 1000,
-            color:"#F7464A",
-            highlight: "#FF5A5E",
-            label: "Red"
-        },
-        {
-            value: 400,
-            color: "#46BFBD",
-            highlight: "#5AD3D1",
-            label: "Green"
-        }
-    ];
-    testPieChart.Pie(newPieData);
-    */
+        //  update data if you need
+        /*
+        var newPieData = [
+            {
+                value: 1000,
+                color:"#F7464A",
+                highlight: "#FF5A5E",
+                label: "Red"
+            },
+            {
+                value: 400,
+                color: "#46BFBD",
+                highlight: "#5AD3D1",
+                label: "Green"
+            }
+        ];
+        testPieChart.Pie(newPieData);
+        */
+    }
 });
