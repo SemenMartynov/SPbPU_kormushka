@@ -18,5 +18,6 @@ urlpatterns += patterns('webapp.api.user_controller',
 )
 
 urlpatterns += patterns('webapp.api.statistics_controller',
-    url(r'^statistics/$', 'statistics')
+    url(r'^statistics/$', 'statistics'),
+    url(r'^users-statistics/$', 'usersStatistics')
 )

@@ -45,3 +45,7 @@ textarea {resize: none}
 .remove-party{ cursor:pointer;}
 
 .cost .glyphicon{top:5px !important; right: 4px; cursor:pointer;}
+
+#statistics-tab{padding: 20px 10px 0 10px}
+
+#statistics-block{padding: 20px 10px 0 10px}

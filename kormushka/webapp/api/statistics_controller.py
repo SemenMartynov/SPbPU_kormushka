@@ -46,7 +46,13 @@ def statistics(request):
 
 	args={	'UserСostsPaid':UserСostsPaid['sum'], 'UserСostsAll':UserСostsAll['sum'], 'UserСostsNotPaid':UserСostsNotPaid['sum'],
 			'ForUserAll':round(ForUserAll,2), 'ForDepartAll':round(ForDepartAll,2),
-			'СostsNotPaid':СostsNotPaid['sum'], 'СostsPaid':СostsPaid['sum'], 'СostsAll':СostsAll['sum']}
+			'СostsNotPaid':СostsNotPaid['sum'], 'СostsPaid':СostsPaid['sum'], 'СostsAll':СostsAll['sum'],
+			'title':'kormushka'}
 	args.update(csrf(request))
 
 	return render(request,'statistics/layout.html', args)
+
+def usersStatistics(request):
+	if request.is_ajax() and request.POST:
+		return HttpResponse(json.dumps('true'))
+	raise Http404
