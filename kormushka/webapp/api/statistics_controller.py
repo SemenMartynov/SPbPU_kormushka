@@ -41,21 +41,25 @@ def personalStatistics(request):
 			end_date = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0]),23,59,59).replace(tzinfo=utc)
 			pur = pur.filter(date__lte=end_date)
 
-		UserСostsPaid = pur.filter(user=current_user_pk, state=1).aggregate(sum=Sum('cost'))#атраты пользователя, которые оплачены
+		UserСostsPaid = pur.filter(user=current_user_pk, state=1).aggregate(sum=Sum('cost'),num=Count('id'))#атраты пользователя, которые оплачены
 		if not UserСostsPaid['sum']: UserСostsPaid['sum'] = 0
-		UserСostsNotPaid = pur.filter(user=current_user_pk, state=0).aggregate(sum=Sum('cost'))#атраты пользователя, которые не оплачены
+		UserСostsNotPaid = pur.filter(user=current_user_pk, state=0).aggregate(sum=Sum('cost'),num=Count('id'))#атраты пользователя, которые не оплачены
 		if not UserСostsNotPaid['sum']: UserСostsNotPaid['sum'] = 0
-		UserСostsAll = pur.filter(user=current_user_pk).aggregate(sum=Sum('cost'))#Затраты пользователя за весь период
+		UserСostsAll = pur.filter(user=current_user_pk).aggregate(sum=Sum('cost'),num=Count('id'))#Затраты пользователя за весь период
 		if not UserСostsAll['sum']: UserСostsAll['sum'] = 0
 
 		#Затраты на пользователя
 		obj = pur.annotate(amount=Count('pop__purchase')).filter(pop__user=current_user_pk)
-		ForUserAll = 0
+		ForUserСostsAll = 0
+		ForUserAllNumber = 0
 		for i in obj:
-			ForUserAll = ForUserAll + i.cost/i.amount
-		if not ForUserAll: ForUserAll = 0
-
-		args={	'UserСostsPaid':UserСostsPaid['sum'], 'UserСostsNotPaid':UserСostsNotPaid['sum'], 'UserСostsAll':UserСostsAll['sum'], 'ForUserAll':round(ForUserAll,2)}
+			ForUserСostsAll = ForUserСostsAll + i.cost/i.amount
+			ForUserAllNumber = ForUserAllNumber + 1
+		if not ForUserСostsAll: ForUserСostsAll	 = 0
+		args={	'UserСostsPaid':UserСostsPaid['sum'], 'UserСostsNotPaid':UserСostsNotPaid['sum'], 'UserСostsAll':UserСostsAll['sum'], 'ForUserСostsAll':round(ForUserСostsAll,2),
+				'UserNumberPaid':UserСostsPaid['num'], 'UserNumberNotPaid':UserСostsNotPaid['num'], 'UserNumberAll':UserСostsAll['num'], 'ForUserAllNumber':ForUserAllNumber}		
+		logger = logging.getLogger(__name__)
+		logger.warn(args)
 		return HttpResponse(json.dumps(args))
 	raise Http404
 
@@ -76,11 +80,11 @@ def departsStatistics(request):
 
 
 		
-		DepartСostsPaid = pur.filter(depart=departid, state=1).aggregate(sum=Sum('cost'))#Затраты отдела оплаченные
+		DepartСostsPaid = pur.filter(depart=departid, state=1).aggregate(sum=Sum('cost'),num=Count('id'))#Затраты отдела оплаченные
 		if not DepartСostsPaid['sum']: DepartСostsPaid['sum'] = 0
-		DepartСostsNotPaid = pur.filter(depart=departid, state=0).aggregate(sum=Sum('cost'))#Затраты отдела неоплаченные
+		DepartСostsNotPaid = pur.filter(depart=departid, state=0).aggregate(sum=Sum('cost'),num=Count('id'))#Затраты отдела неоплаченные
 		if not DepartСostsNotPaid['sum']: DepartСostsNotPaid['sum'] = 0
-		DepartСostsAll = pur.filter(depart=departid).aggregate(sum=Sum('cost'))#Затраты отдела всего
+		DepartСostsAll = pur.filter(depart=departid).aggregate(sum=Sum('cost'),num=Count('id'))#Затраты отдела всего
 		if not DepartСostsAll['sum']: DepartСostsAll['sum'] = 0
 
 		#Затраты на отдел
@@ -91,7 +95,8 @@ def departsStatistics(request):
 			for i in obj:
 				ForDepartAll = ForDepartAll + i.cost/i.amount
 		if not ForDepartAll: ForDepartAll = 0
-		args={'DepartСostsPaid': DepartСostsPaid['sum'], 'DepartСostsNotPaid': DepartСostsNotPaid['sum'], 'DepartСostsAll': DepartСostsAll['sum'], 'ForDepartAll':round(ForDepartAll,2)}
+		args={	'DepartСostsPaid':DepartСostsPaid['sum'], 'DepartСostsNotPaid': DepartСostsNotPaid['sum'], 'DepartСostsAll': DepartСostsAll['sum'], 'ForDepartAll':round(ForDepartAll,2),
+				'DepartNumberPaid':DepartСostsPaid['num'], 'DepartNumberNotPaid': DepartСostsNotPaid['num'], 'DepartNumberAll': DepartСostsAll['num']}
 		return HttpResponse(json.dumps(args))
 	raise Http404
 
@@ -110,14 +115,15 @@ def organizationStatistics(request):
 			end_date = datetime.datetime(int(date2[2]), int(date2[1]), int(date2[0]),23,59,59).replace(tzinfo=utc)
 			pur = pur.filter(date__lte=end_date)
 
-		СostsPaid = pur.filter(state=1).aggregate(sum=Sum('cost'))#Сумма оплаченные покупок
+		СostsPaid = pur.filter(state=1).aggregate(sum=Sum('cost'),num=Count('id'))#Сумма оплаченные покупок
 		if not СostsPaid['sum']: СostsPaid['sum'] = 0
-		СostsNotPaid = pur.filter(state=0).aggregate(sum=Sum('cost'))#Сумма неоплаченные покупок
+		СostsNotPaid = pur.filter(state=0).aggregate(sum=Sum('cost'),num=Count('id'))#Сумма неоплаченные покупок
 		if not СostsNotPaid['sum']: СostsNotPaid['sum'] = 0
-		СostsAll = pur.aggregate(sum=Sum('cost'))#Сумма всех покупок
+		СostsAll = pur.aggregate(sum=Sum('cost'),num=Count('id'))#Сумма всех покупок
 		if not СostsAll['sum']: СostsAll['sum'] = 0
 
-		args={'СostsNotPaid':СostsNotPaid['sum'], 'СostsPaid':СostsPaid['sum'], 'СostsAll':СostsAll['sum']}
+		args={	'СostsNotPaid':СostsNotPaid['sum'], 'СostsPaid':СostsPaid['sum'], 'СostsAll':СostsAll['sum'],
+				'NumberNotPaid':СostsNotPaid['num'], 'NumberPaid':СostsPaid['num'], 'NumberAll':СostsAll['num']}
 		return HttpResponse(json.dumps(args))
 	raise Http404
 

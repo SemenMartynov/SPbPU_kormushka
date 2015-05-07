@@ -4,7 +4,11 @@ $(document).ready(function () {
         $('.personal-costs-paid').html("");
         $('.personal-costs-not-paid').html("");
         $('.personal-costs-all').html("");
-        $('.for-personal-all').html("");
+        $('.for-personal-costs-all').html("");
+        $('.personal-number-paid').html("");
+        $('.personal-number-not-paid').html("");
+        $('.personal-number-all').html("");
+        $('.for-personal-number-all').html("");
 
         data = {
         'csrfmiddlewaretoken' : csrf_token,
@@ -18,10 +22,15 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
+                console.log(data['UserNumberPaid']);
                 $('.personal-costs-paid').html(data['UserСostsPaid']);
                 $('.personal-costs-not-paid').html(data['UserСostsNotPaid']);
                 $('.personal-costs-all').html(data['UserСostsAll']);
-                $('.for-personal-all').html(data['ForUserAll']);
+                $('.for-personal-costs-all').html(data['ForUserСostsAll']);
+                $('.personal-number-paid').html(data['UserNumberPaid']);
+                $('.personal-number-not-paid').html(data['UserNumberNotPaid']);
+                $('.personal-number-all').html(data['UserNumberAll']);
+                $('.for-personal-number-all').html(data['ForUserAllNumber']);
             },
         });
     }
@@ -31,6 +40,10 @@ $(document).ready(function () {
         $('.user-costs-not-paid').html("");
         $('.user-costs-all').html("");
         $('.for-user-all').html("");
+        $('.user-number-paid').html("");
+        $('.user-number-not-paid').html("");
+        $('.user-number-all').html("");
+        $('.for-user-number-all').html("");
 
         user = $('#user-stat').attr("data-id");
         if(user){
@@ -50,7 +63,11 @@ $(document).ready(function () {
                     $('.user-costs-paid').html(data['UserСostsPaid']);
                     $('.user-costs-not-paid').html(data['UserСostsNotPaid']);
                     $('.user-costs-all').html(data['UserСostsAll']);
-                    $('.for-user-all').html(data['ForUserAll']);    
+                    $('.for-user-all').html(data['ForUserСostsAll']);  
+                    $('.user-number-paid').html(data['UserNumberPaid']);
+                    $('.user-number-not-paid').html(data['UserNumberNotPaid']);
+                    $('.user-number-all').html(data['UserNumberAll']);
+                    $('.for-user-number-all').html(data['ForUserAllNumber']);  
                 }
             });
         }
@@ -61,6 +78,9 @@ $(document).ready(function () {
         $('.depart-costs-not-paid').html("");
         $('.depart-costs-all').html("");
         $('.for-depart-all').html("");
+        $('.depart-number-paid').html("");
+        $('.depart-number-not-paid').html("");
+        $('.depart-number-all').html("");
 
         depart = $('#depart-stat').attr("data-id");
         if(depart){
@@ -80,6 +100,9 @@ $(document).ready(function () {
                     $('.depart-costs-not-paid').html(data['DepartСostsNotPaid']);
                     $('.depart-costs-all').html(data['DepartСostsAll']);
                     $('.for-depart-all').html(data['ForDepartAll']);
+                    $('.depart-number-paid').html(data['DepartNumberPaid']);
+                    $('.depart-number-not-paid').html(data['DepartNumberNotPaid']);
+                    $('.depart-number-all').html(data['DepartNumberAll']); 
                 }
             });
         }
@@ -89,6 +112,9 @@ $(document).ready(function () {
         $('.costs-paid').html("");
         $('.costs-not-paid').html("");
         $('.costs-all').html("");
+        $('.number-paid').html("");
+        $('.number-not-paid').html("");
+        $('.number-all').html("");
         
         data = {
             'csrfmiddlewaretoken' : csrf_token,
@@ -104,6 +130,9 @@ $(document).ready(function () {
                 $('.costs-paid').html(data['СostsNotPaid']);
                 $('.costs-not-paid').html(data['СostsPaid']);
                 $('.costs-all').html(data['СostsAll']);
+                $('.number-paid').html(data['NumberNotPaid']);
+                $('.number-not-paid').html(data['NumberPaid']);
+                $('.number-all').html(data['NumberAll']);
             }
         });
     }
