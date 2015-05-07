@@ -1,0 +1,146 @@
+ \documentclass{beamer}
+
+\newlength{\wideitemsep}
+\setlength{\wideitemsep}{\itemsep}
+\addtolength{\wideitemsep}{10pt}
+\let\olditem\item
+\renewcommand{\item}{\setlength{\itemsep}{\wideitemsep}\olditem}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{cmap}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\setbeamertemplate{caption}[numbered]
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\title[Технологии разработки ПО]{Kormushka:\\Software testing}
+
+\author{Black team.}
+\institute[СПб ПУ]
+{
+Санкт-Петербургский государственный политехнический университет \\
+\medskip
+\textit{https://github.com/SemenMartynov/kormushka}
+}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Содержание}
+\tableofcontents
+\end{frame}
+
+%------------------------------------------------
+\section{Модульное тестирование (unit testing) в django}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Тестирование по степени изолированности компонентов}
+
+\begin{block}{Модульное тестирование}
+Процесс в программировании, позволяющий проверить на корректность отдельные модули исходного кода программы.
+\end{block}
+
+\begin{block}{Интеграционное тестирование}
+Одна из фаз тестирования программного обеспечения, при которой отдельные программные модули объединяются и тестируются в группе.
+\end{block}
+
+\begin{block}{Системное тестирование}
+Тестирование программного обеспечения (ПО), выполняемое на полной, интегрированной системе, с целью проверки соответствия системы исходным требованиям. Системное тестирование относится к методам тестирования чёрного ящика, и, тем самым, не требует знаний о внутреннем устройстве системы.
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Объект тестирования}
+
+В проекте можно выделить следующие элементы для тестирования:
+\begin{itemize}
+\item Вёрстка
+\item JavaScript
+\item БД
+\item LDAP
+\item WEB-сервер
+\item back-end (Python)
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Test-Driven Development}
+
+TDD -- это не метод тестирования, а метод разработки!
+\bigskip
+
+\begin{enumerate}
+\item сначала пишется тест, покрывающий желаемое изменение
+\item затем пишется код, который позволит пройти тест
+\item под конец проводится рефакторинг нового кода к соответствующим стандартам
+\end{enumerate}
+\bigskip
+
+Иногда говорят о Test First Development.
+
+\end{frame}
+
+%------------------------------------------------
+\section{Smoke testing}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Smoke testing}
+
+Smoke Test -- минимальный набор тестов на явные ошибки. Выполняется самим программистом; не проходящую этот тест программу не имеет смысла отдавать на более глубокое тестирование.
+\medskip
+
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Покрытие кода (code coverage)}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Покрытие кода (code coverage)}
+
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Документирование кода (Doxygen)}
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Документирование кода (Doxygen)}
+
+
+
+\end{frame}
+
+%------------------------------------------------
+\section{Вопросы}
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Вопросы?}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
