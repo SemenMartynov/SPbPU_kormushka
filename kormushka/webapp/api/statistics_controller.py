@@ -120,3 +120,16 @@ def organizationStatistics(request):
 		args={'СostsNotPaid':СostsNotPaid['sum'], 'СostsPaid':СostsPaid['sum'], 'СostsAll':СostsAll['sum']}
 		return HttpResponse(json.dumps(args))
 	raise Http404
+
+def getDateForPeriod(request):
+	if request.is_ajax() and request.POST:
+		periodType =  request.POST.get('type')
+		date2 = datetime.datetime.now().date()
+		if periodType=='day': date1=date2
+		elif periodType=='week': date1 = date2 - datetime.timedelta(days=6)
+		elif periodType=='month': date1 = date2 - datetime.timedelta(days=29)
+		elif periodType=='year': date1 = date2 - datetime.timedelta(days=364)
+		else: date1 =  datetime.datetime.now().date()
+		args={'date1':date1.strftime("%d/%m/%Y"), 'date2':date2.strftime("%d/%m/%Y")}
+		return HttpResponse(json.dumps(args))
+	raise Http404

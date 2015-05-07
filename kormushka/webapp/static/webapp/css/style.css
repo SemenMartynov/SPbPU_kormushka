@@ -1,18 +1,12 @@
-body {
-    margin-top: 50px;
-    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
-}
+body { margin-top: 50px; font-family: tahoma, arial, verdana, sans-serif, Lucida Sans; }
 
-.container {
-    max-width: 730px;
-}
+hr {margin-top: 0px; margin-bottom: 5px;}
 
-.cont {
-    min-height: 600px;
-    border: 1px solid transparent;
-    border-color:#ddd;
-    padding-top: 10px;
-}
+textarea {resize: none}
+
+.container { max-width: 730px; }
+
+.cont { min-height: 600px; border: 1px solid transparent; border-color:#ddd;  padding-top: 10px; }
 
 .no-border{border: 0;}
 
@@ -32,10 +26,6 @@ body {
 
 .block-add{background-color: #ddd;}
 
-hr {margin-top: 0px; margin-bottom: 5px;}
-
-textarea {resize: none}
-
 .block-info{margin-bottom: 10px;}
 
 .block-auth{margin-top: 30%;}
@@ -46,6 +36,12 @@ textarea {resize: none}
 
 .cost .glyphicon{top:5px !important; right: 4px; cursor:pointer;}
 
-#statistics-tab{padding: 20px 10px 0 10px}
+#statistics-tab{padding: 20px 15px 0 10px;}
 
-#statistics-block{padding: 20px 10px 0 10px}
+#statistics-block{padding: 20px 15px 0 10px;}
+
+#button-show{margin-left: 15px;}
+
+.my-form-group{margin-bottom: 0px;}
+
+.period-purchase{padding-left: 3px; font-size: 85%;}
