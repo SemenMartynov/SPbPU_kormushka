@@ -1,0 +1,162 @@
+<div class="container">
+    <div class="row">
+        <div class='col-sm-5'>
+            <div class="form-group my-form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" placeholder="Без ограничения"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+         <div class='col-sm-5'>
+            <div class="form-group my-form-group">
+                <div class='input-group date' id='datetimepicker2'>
+                    <input type='text' class="form-control" placeholder="Без ограничения"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-default" id = "button-show">Просмотр</button>
+    </div>
+    <div class="row">
+  		<div class="col-sm-offset-7 col-sm-5">
+  			<a class="show-year period-purchase" data-type="year" data-toggle="modal" href="#">Год</a>
+  			<a class="show-month period-purchase" data-type="month" data-toggle="modal" href="#">Месяц</a>
+  			<a class="show-week period-purchase" data-type="week" data-toggle="modal" href="#">Неделя</a>
+  			<a class="show-day period-purchase" data-type="day" data-toggle="modal" href="#">День</a>
+  		</div>
+	</div>
+</div>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" id="statistics-tab">
+  <li class="active"><a href="#personal-statistics">Личная</a></li>
+  <li><a href="#users-statistics">Пользователи</a></li>
+  <li><a href="#departs-statistics">Отделы</a></li>
+  <li><a href="#organization-statistics">Организация</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content" id="statistics-block">
+  <div class="tab-pane fade in active" id="personal-statistics">
+	  <table class="table table-striped">
+	  	<thead>
+			<tr>
+				<th>Категория</th>
+				<th>Сумма</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Оплаченные затраты</td>
+				<td><span class="personal-costs-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Не оплаченные затраты</td>
+				<td><span class="personal-costs-not-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Всего затраты</td>
+				<td><span class="personal-costs-all"></span></td>
+			</tr>
+			<tr>
+				<td>Затраты на пользователя</td>
+				<td><span class="for-personal-all"></span></td>
+			</tr>
+		</tbody>
+	</table>
+  </div><!--end personal-statistics-->
+
+  <div class="tab-pane fade" id="users-statistics">
+  	<div class="col-md-6 ui-widget">
+  		<input id="user-stat" name="user-stat" type="text" placeholder="" class="form-control input-md">
+  	</div>
+  	<table class="table table-striped">
+	  	<thead>
+			<tr>
+				<th>Категория</th>
+				<th>Сумма</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Оплаченные затраты</td>
+				<td><span class="user-costs-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Не оплаченные затраты</td>
+				<td><span class="user-costs-not-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Всего затраты</td>
+				<td><span class="user-costs-all"></span></td>
+			</tr>
+			<tr>
+				<td>Затраты на пользователя</td>
+				<td><span class="for-user-all"></span></td>
+			</tr>
+		</tbody>
+	</table>
+  </div><!--end users-statistics-->
+
+  <div class="tab-pane fade" id="departs-statistics">
+  	<div class="col-md-6 ui-widget">
+  		<input id="depart-stat" name="depart-stat" type="text" placeholder="" class="form-control input-md">
+  	</div>
+  	<table class="table table-striped">
+	  	<thead>
+			<tr>
+				<th>Категория</th>
+				<th>Сумма</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Оплаченные затраты</td>
+				<td><span class="depart-costs-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Не оплаченные затраты</td>
+				<td><span class="depart-costs-not-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Всего затраты</td>
+				<td><span class="depart-costs-all"></span></td>
+			</tr>
+  			<tr>
+				<td>Затраты на отдел</td>
+				<td><span class="for-depart-all"></span></td>
+			</tr>
+		</tbody>
+	</table>
+  </div><!--end departs-statistics-->
+
+  <div class="tab-pane fade" id="organization-statistics">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Категория</th>
+				<th>Сумма</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<tr>
+				<td>Сумма оплаченных покупок</td>
+				<td><span class="costs-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Сумма неоплаченные покупок</td>
+				<td><span class="costs-not-paid"></span></td>
+			</tr>
+			<tr>
+				<td>Сумма всех покупок</td>
+				<td><span class="costs-all"></span></td>
+			</tr>
+		</tbody>
+	</table>
+  </div><!--end organization-statistics-->
+</div>

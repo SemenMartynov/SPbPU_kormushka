@@ -3,16 +3,16 @@
 {% for iter in purchase reversed %}
         <!--purchase block-->   
         <hr />     
-        <div class="row">
+        <div class="row purchase-block">
           <div class="col-xs-2 col-mb-2">
           	<img src="{% static 'webapp/img/avatar.jpg' %}" alt="..." class="img-thumbnail no-border">
-          	<p class="text-center">{% if iter.statr%}<span class="label label-primary">paid</span>{% else %}<span class="label label-danger">not paid</span>{% endif %}</p>
+          	<p class="text-center">{% if iter.state%}<span class="label label-primary state-paid">paid</span>{% else %}<span class="label label-danger state-paid">not paid</span>{% endif %}</p>
           </div>
           <div class="col-xs-10 col-mb-10 purchase">
 
             <div class="row">
               <div class="col-xs-9 col-mb-9"><span class="purchase-name">{{iter.name}}</span></div>
-              <div class="cost"><span class="label label-success">{{iter.cost}}</span></div>
+              <div class="cost">{% if iter.state = 0 %}<span data-id="{{iter.pk}}" class="glyphicon glyphicon-usd calculation">{% endif %}</span><span class="label label-success">{{iter.cost}}</span></div>
             </div>
 
             <div class="row">

@@ -23,7 +23,7 @@ class Purchase(models.Model):
 	depart = models.ForeignKey(Depart,verbose_name = "Отдел")
 	date = models.DateTimeField("Дата совершения",auto_now=True, blank=True)
 	cost = models.IntegerField("Сумма",default = 0)
-	state = models.IntegerField("Состояние",default = 0)#оплачена или нет
+	state = models.IntegerField("Состояние",default = 0)#оплачена или нет 0-не оплачено, 1-оплачено
 	about = models.TextField(blank=True)
 	category = models.ForeignKey(Category)
 

@@ -1,5 +1,9 @@
 $(document).ready(function () {
 
+    //  select template and inner elements for work
+    var template = $("#add-purchase-form-template");
+    if (!template[0]) return;
+
     /**********
         buy click handler
     **********/
@@ -55,7 +59,6 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
-                console.log(data);
                 arr = [];
                 _.each(data,function(el){
                     arr.push({
@@ -102,7 +105,4 @@ $(document).ready(function () {
         var template = '<div data-user-id="' + UserId + '" data-depart-id="' + selectId + '" class="party">' +  App.currentUserFullName + ' (' + selectDepart + ')</div>';
         $('#block-partner-add').prepend(template);
     });
-
-    
-    
 });
