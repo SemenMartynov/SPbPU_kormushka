@@ -22,7 +22,6 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
-                console.log(data['UserNumberPaid']);
                 $('.personal-costs-paid').html(data['UserСostsPaid']);
                 $('.personal-costs-not-paid').html(data['UserСostsNotPaid']);
                 $('.personal-costs-all').html(data['UserСostsAll']);
@@ -241,7 +240,6 @@ $(document).ready(function () {
 
     $( ".period-purchase").click(function (){
         var type = $(this).attr('data-type');
-        console.log(type);
         data = {
             'csrfmiddlewaretoken' : csrf_token,
             'type': type,
@@ -252,7 +250,6 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
-                console.log(data);
                 $('#datetimepicker1').data("DateTimePicker").date(data['date1']);
                 $('#datetimepicker2').data("DateTimePicker").date(data['date2']);
             }

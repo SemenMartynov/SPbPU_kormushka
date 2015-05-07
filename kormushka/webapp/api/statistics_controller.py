@@ -58,8 +58,6 @@ def personalStatistics(request):
 		if not ForUserСostsAll: ForUserСostsAll	 = 0
 		args={	'UserСostsPaid':UserСostsPaid['sum'], 'UserСostsNotPaid':UserСostsNotPaid['sum'], 'UserСostsAll':UserСostsAll['sum'], 'ForUserСostsAll':round(ForUserСostsAll,2),
 				'UserNumberPaid':UserСostsPaid['num'], 'UserNumberNotPaid':UserСostsNotPaid['num'], 'UserNumberAll':UserСostsAll['num'], 'ForUserAllNumber':ForUserAllNumber}		
-		logger = logging.getLogger(__name__)
-		logger.warn(args)
 		return HttpResponse(json.dumps(args))
 	raise Http404
 
