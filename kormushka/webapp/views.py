@@ -57,8 +57,11 @@ def addpurchase(request):
 def getUsersByName(request):
 	if request.is_ajax() and request.POST:
 		name = request.POST.get('name')
-
-		all_objects = list(PO.objects.filter(Q(user__last_name__icontains=name) | Q(user__first_name__icontains=name) | Q(depart__name__icontains=name)))
+		getType = request.POST.get('type')
+		if getType == 'less-user':
+			all_objects = list(PO.objects.filter(Q(user__last_name__icontains=name) | Q(user__first_name__icontains=name) | Q(depart__name__icontains=name)).exclude(user__pk=auth.get_user(request).pk))
+		else:
+			all_objects = list(PO.objects.filter(Q(user__last_name__icontains=name) | Q(user__first_name__icontains=name) | Q(depart__name__icontains=name)))
 		UserInDepart = list()
 		for obj in all_objects:
 			UserInDepart.append({"label": obj.user.get_full_name() + ' (' + obj.depart.name + ')', "userid": obj.user.pk, "departid": obj.depart.pk})

@@ -170,6 +170,7 @@ $(document).ready(function () {
         data = {
             'csrfmiddlewaretoken' : csrf_token,
             name: request.term,
+            type: 'all',
         },
         $.ajax({
             url: "/get-users-by-name/",

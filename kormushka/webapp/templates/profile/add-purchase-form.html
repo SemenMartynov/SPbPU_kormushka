@@ -73,15 +73,16 @@
                                 <input id="user-member" name="user-member" type="text" placeholder="" class="form-control input-md">
                             </div>
                         </div>
+                        <div class="row" id="list-user-member">
+                            <div id="block-partner-add" class="modal-body col-md-offset-3">
+                                <div data-user-id="{{user.pk}}" data-depart-id="{{depart.0.pk}}" class="party">{{user.get_full_name}} ({{depart.0.depart}})</div>
+                            </div>
+                        </div>
                         <!-- Кнопка Купить -->
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="buy"></label>
                             <div class="col-md-4">
                                  <button id="buy" name="buy" class="btn btn-primary">Купить</button>
-                            </div>
-                            <div class="col-md-3">
-                                <!-- TODO: change myModalApp for something with sense -->
-                                 <a data-toggle="modal" data-target="#myModalAdd" href="#">Участники</a>
                             </div>
                         </div>
 
@@ -91,23 +92,4 @@
         </div>
       </div>
     </div>
-
-    <!-- Модальное окно списка участников добавляемой покупки -->
-    <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Участники покупки:</h4>
-          </div>
-          <div id="block-partner-add" class="modal-body">
-            <div data-user-id="{{user.pk}}" data-depart-id="{{depart.0.pk}}" class="party">{{user.get_full_name}} ({{depart.0.depart}})</div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- End Модальное окно списка участников добавляемой покупки-->
 </div>
