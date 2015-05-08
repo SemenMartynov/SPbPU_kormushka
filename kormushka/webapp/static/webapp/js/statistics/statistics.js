@@ -1,4 +1,59 @@
 $(document).ready(function () {
+    var template = $("#test-chart-template");
+    if (!template[0]) return;
+    var listChartContainer = template.find("#test-linechart");
+
+    var lineChartData = {
+        labels : [1,2,3],
+        datasets : [
+            {
+                label: "My First dataset",
+                fillColor : "rgba(151,187,205,0.2)",
+                strokeColor : "rgba(151,187,205,1)",
+                pointColor : "rgba(151,187,205,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(220,220,220,1)",
+                data : [1,2,3]
+            }
+        ]
+    };
+
+    var ctx = listChartContainer[0].getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+    var chart = new Chart(ctx);
+    var lineChart = chart.Line(lineChartData, {
+        responsive: true
+    });
+
+    var renderLineChart = function(lineChart, ctx, lineChartData) {
+        lineChart.destroy();        
+
+        var testLineChart = new Chart(ctx).Line(lineChartData, {
+            responsive: true
+        });
+    };
+
+    function costsLineChart(data,labels,result){
+        if(result=='true'){
+            //  select template and inner elements for work
+
+
+            //  http://www.chartjs.org/docs/#line-chart
+            // https://github.com/nnnick/Chart.js/blob/master/samples/line.html
+
+            //  check selected element
+
+            lineChartData.labels = labels;
+            lineChartData.datasets[0].data = data;
+
+
+
+            if (!!listChartContainer) {                
+                renderLineChart(lineChart, ctx, lineChartData);
+            }
+        }
+        
+    }
 
     function personalStatistics(){
         $('.personal-costs-paid').html("");
@@ -30,6 +85,8 @@ $(document).ready(function () {
                 $('.personal-number-not-paid').html(data['UserNumberNotPaid']);
                 $('.personal-number-all').html(data['UserNumberAll']);
                 $('.for-personal-number-all').html(data['ForUserAllNumber']);
+                costsLineChart(data['sumOfPeriods'],data['labels'],data['result']);
+
             },
         });
     }
