@@ -103,7 +103,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/opt/korm_dev/kormushka/kormushka/static/'
+STATIC_ROOT = '/opt/k_env/kormushka/kormushka/static/'
 
 AUTH_INFORMATION = { 'LDAP': {
     'USERNAME_SEARCH_FILTER': '(uid={})',
