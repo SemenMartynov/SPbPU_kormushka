@@ -1,10 +1,11 @@
 $(document).ready(function () {
-    var template = $("#test-chart-template");
+
+     var template = $("#test-chart-template");
     if (!template[0]) return;
     var listChartContainer = template.find("#test-linechart");
 
     var lineChartData = {
-        labels : [1,2,3],
+        labels : [],
         datasets : [
             {
                 label: "My First dataset",
@@ -14,27 +15,19 @@ $(document).ready(function () {
                 pointStrokeColor : "#fff",
                 pointHighlightFill : "#fff",
                 pointHighlightStroke : "rgba(220,220,220,1)",
-                data : [1,2,3]
-            }
+                data : []
+            },
         ]
     };
 
     var ctx = listChartContainer[0].getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
     var chart = new Chart(ctx);
     var lineChart = chart.Line(lineChartData, {
-        responsive: true
+        responsive: true,
     });
 
-    var renderLineChart = function(lineChart, ctx, lineChartData) {
-        lineChart.destroy();        
-
-        var testLineChart = new Chart(ctx).Line(lineChartData, {
-            responsive: true
-        });
-    };
-
     function costsLineChart(data,labels,result){
-        if(result=='true'){
+        if(result){
             //  select template and inner elements for work
 
 
@@ -46,13 +39,25 @@ $(document).ready(function () {
             lineChartData.labels = labels;
             lineChartData.datasets[0].data = data;
 
+            lineChart.initialize(lineChartData);
 
 
-            if (!!listChartContainer) {                
-                renderLineChart(lineChart, ctx, lineChartData);
-            }
         }
         
+    }
+
+    function getHtmlDetail(Days, Months, Years){
+        var strHtml = "";
+        if(Days){
+            strHtml = strHtml + '<a class="detail-stat-year step-detail" data-type="year" data-toggle="modal" href="#">День</a>';
+        }
+        if(Months){
+            strHtml = strHtml + '<a class="detail-stat-month step-detail" data-type="month" data-toggle="modal" href="#">Месяц</a>';
+        }
+        if(Years){
+            strHtml = strHtml + '<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">Год</a>';
+        }
+        return strHtml;
     }
 
     function personalStatistics(){
@@ -65,11 +70,13 @@ $(document).ready(function () {
         $('.personal-number-all').html("");
         $('.for-personal-number-all').html("");
 
+        start_date = $('#datetimepicker1').data('date');
+        end_date = $('#datetimepicker2').data('date');
         data = {
         'csrfmiddlewaretoken' : csrf_token,
         'type': 'personal',
-        'date1': $('#datetimepicker1').data('date'),            
-        'date2': $('#datetimepicker2').data('date')
+        'date1': start_date,            
+        'date2': end_date
         };
         $.ajax({
             url: "/personal-statistics/",
@@ -77,6 +84,7 @@ $(document).ready(function () {
             dataType: "json",
             data: data,
             success: function( data ) {
+                console.log(data);
                 $('.personal-costs-paid').html(data['UserСostsPaid']);
                 $('.personal-costs-not-paid').html(data['UserСostsNotPaid']);
                 $('.personal-costs-all').html(data['UserСostsAll']);
@@ -86,6 +94,9 @@ $(document).ready(function () {
                 $('.personal-number-all').html(data['UserNumberAll']);
                 $('.for-personal-number-all').html(data['ForUserAllNumber']);
                 costsLineChart(data['sumOfPeriods'],data['labels'],data['result']);
+                $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']))
+
 
             },
         });
@@ -329,6 +340,8 @@ $(document).ready(function () {
             viewMode: 'days'
         });
     });
+
+    var $range = $(".js-range-slider");
 
 	personalStatistics("#personal-statistics"); // Select tab by name
 });

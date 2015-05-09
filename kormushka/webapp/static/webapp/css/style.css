@@ -47,3 +47,9 @@ textarea {resize: none}
 .period-purchase{padding-left: 3px; font-size: 85%;}
 
 #list-user-member{margin-top: -15px;}
+
+.detail-stat{float: right; margin-right: 20px;}
+
+.linechart-text{margin-left: 20px;}
+
+.step-detail{margin-left: 10px;}

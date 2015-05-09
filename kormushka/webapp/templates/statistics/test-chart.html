@@ -1,5 +1,13 @@
 <div id="test-chart-template">  <!--    this id need for js, because js need to know with what template js works -->
-    <p>Тест статистика - linechart: </p>
+    <div class="row">
+	    <span class="linechart-text"></span>
+	    <span class="detail-stat">
+	    	<a class="detail-stat-year step-detail" data-type="year" data-toggle="modal" href="#">День</a>
+	    	<a class="detail-stat-month step-detail" data-type="month" data-toggle="modal" href="#">Месяц</a>
+	    	<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">Год</a>
+	    </span>
+    </div>
+
     <canvas id="test-linechart"></canvas>
     <p>Тест статистика - piechart: </p>
     <canvas id="test-piechart"></canvas>
