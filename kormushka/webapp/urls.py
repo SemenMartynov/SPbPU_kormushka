@@ -20,8 +20,6 @@ urlpatterns += patterns('webapp.api.user_controller',
 
 urlpatterns += patterns('webapp.api.statistics_controller',
     url(r'^statistics/$', 'statistics'),
-    url(r'^personal-statistics/$', 'personalStatistics'),
-    url(r'^departs-statistics/$', 'departsStatistics'),
-    url(r'^organization-statistics/$', 'organizationStatistics'),
-	url(r'^get-date-for-period/$', 'getDateForPeriod')
+	url(r'^get-date-for-period/$', 'getDateForPeriod'),
+	url(r'^get-data-for-stat/$', 'getDataForStat')
 )

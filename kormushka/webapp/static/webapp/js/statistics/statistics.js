@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-     var template = $("#test-chart-template");
+    var template = $("#test-chart-template");
     if (!template[0]) return;
     var listChartContainer = template.find("#test-linechart");
 
@@ -57,9 +57,17 @@ $(document).ready(function () {
         if(Years){
             strHtml = strHtml + '<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">Год</a>';
         }
+        // glyphicon glyphicon-eye-close
         return strHtml;
     }
 
+    function getDataGraph(data){
+        App.sumOnСostsPaid = data['sumOnСostsPaid'];
+        App.sumOnСostsNotPaid = data['sumOnСostsNotPaid'];
+        App.sumOnСostsAll = data['sumOnСostsAll'];
+        App.labels =  data['labels'];
+        App.result = data['result'];
+    }
     function personalStatistics(){
         $('.personal-costs-paid').html("");
         $('.personal-costs-not-paid').html("");
@@ -69,35 +77,38 @@ $(document).ready(function () {
         $('.personal-number-not-paid').html("");
         $('.personal-number-all').html("");
         $('.for-personal-number-all').html("");
+        resGraph();
 
         start_date = $('#datetimepicker1').data('date');
         end_date = $('#datetimepicker2').data('date');
         data = {
         'csrfmiddlewaretoken' : csrf_token,
-        'type': 'personal',
+        'typeUser': 'personal',
+        'statType': 'personal-stat',
         'date1': start_date,            
         'date2': end_date
         };
         $.ajax({
-            url: "/personal-statistics/",
+            url: "/get-data-for-stat/",
             type: "POST",
             dataType: "json",
             data: data,
-            success: function( data ) {
-                console.log(data);
-                $('.personal-costs-paid').html(data['UserСostsPaid']);
-                $('.personal-costs-not-paid').html(data['UserСostsNotPaid']);
-                $('.personal-costs-all').html(data['UserСostsAll']);
-                $('.for-personal-costs-all').html(data['ForUserСostsAll']);
-                $('.personal-number-paid').html(data['UserNumberPaid']);
-                $('.personal-number-not-paid').html(data['UserNumberNotPaid']);
-                $('.personal-number-all').html(data['UserNumberAll']);
-                $('.for-personal-number-all').html(data['ForUserAllNumber']);
-                costsLineChart(data['sumOfPeriods'],data['labels'],data['result']);
+            success: function(data) {
+                $('.personal-costs-paid').html(data['СostsPaid']);
+                $('.personal-costs-not-paid').html(data['СostsNotPaid']);
+                $('.personal-costs-all').html(data['СostsAll']);
+                $('.for-personal-costs-all').html(data['ForСostsAll']);
+                $('.personal-number-paid').html(data['NumberPaid']);
+                $('.personal-number-not-paid').html(data['NumberNotPaid']);
+                $('.personal-number-all').html(data['NumberAll']);
+                $('.for-personal-number-all').html(data['ForAllNumber']);
+                
+                getDataGraph(data);//запись в глобальную переменную данных для графика
+
+                costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
                 $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
-                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']))
-
-
+                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                $('#personal-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
             },
         });
     }
@@ -111,6 +122,7 @@ $(document).ready(function () {
         $('.user-number-not-paid').html("");
         $('.user-number-all').html("");
         $('.for-user-number-all').html("");
+        resGraph();
 
         user = $('#user-stat').attr("data-id");
         if(user){
@@ -118,26 +130,35 @@ $(document).ready(function () {
                 'csrfmiddlewaretoken' : csrf_token,
                 'date1': $('#datetimepicker1').data('date'),            
                 'date2': $('#datetimepicker2').data('date'),
-                'type': 'users',
+                'typeUser': 'users',
+                'statType': 'personal-stat',
                 'userid': user,
             };
             $.ajax({
-                url: "/personal-statistics/",
+                url: "/get-data-for-stat/",
                 type: "POST",
                 dataType: "json",
                 data: data,
                 success: function( data ) {
-                    $('.user-costs-paid').html(data['UserСostsPaid']);
-                    $('.user-costs-not-paid').html(data['UserСostsNotPaid']);
-                    $('.user-costs-all').html(data['UserСostsAll']);
-                    $('.for-user-all').html(data['ForUserСostsAll']);  
-                    $('.user-number-paid').html(data['UserNumberPaid']);
-                    $('.user-number-not-paid').html(data['UserNumberNotPaid']);
-                    $('.user-number-all').html(data['UserNumberAll']);
-                    $('.for-user-number-all').html(data['ForUserAllNumber']);  
+                    $('.user-costs-paid').html(data['СostsPaid']);
+                    $('.user-costs-not-paid').html(data['СostsNotPaid']);
+                    $('.user-costs-all').html(data['СostsAll']);
+                    $('.for-user-all').html(data['ForСostsAll']);  
+                    $('.user-number-paid').html(data['NumberPaid']);
+                    $('.user-number-not-paid').html(data['NumberNotPaid']);
+                    $('.user-number-all').html(data['NumberAll']);
+                    $('.for-user-number-all').html(data['ForAllNumber']); 
+
+                    getDataGraph(data);//запись в глобальную переменную данных для графика
+
+                    costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
+                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    $('#users-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
                 }
             });
         }
+        costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
     }
 
     function departsStatistics(){
@@ -148,6 +169,7 @@ $(document).ready(function () {
         $('.depart-number-paid').html("");
         $('.depart-number-not-paid').html("");
         $('.depart-number-all').html("");
+        resGraph();
 
         depart = $('#depart-stat').attr("data-id");
         if(depart){
@@ -155,23 +177,33 @@ $(document).ready(function () {
             'csrfmiddlewaretoken' : csrf_token,
             'date1': $('#datetimepicker1').data('date'),            
             'date2': $('#datetimepicker2').data('date'),
+            'statType': 'depart-stat',
             'departid': depart,
             };
             $.ajax({
-                url: "/departs-statistics/",
+                url: "/get-data-for-stat/",
                 type: "POST",
                 dataType: "json",
                 data: data,
                 success: function( data ) {
-                    $('.depart-costs-paid').html(data['DepartСostsPaid']);
-                    $('.depart-costs-not-paid').html(data['DepartСostsNotPaid']);
-                    $('.depart-costs-all').html(data['DepartСostsAll']);
-                    $('.for-depart-all').html(data['ForDepartAll']);
-                    $('.depart-number-paid').html(data['DepartNumberPaid']);
-                    $('.depart-number-not-paid').html(data['DepartNumberNotPaid']);
-                    $('.depart-number-all').html(data['DepartNumberAll']); 
+                    $('.depart-costs-paid').html(data['СostsPaid']);
+                    $('.depart-costs-not-paid').html(data['СostsNotPaid']);
+                    $('.depart-costs-all').html(data['СostsAll']);
+                    $('.for-depart-all').html(data['ForСostsAll']);
+                    $('.depart-number-paid').html(data['NumberPaid']);
+                    $('.depart-number-not-paid').html(data['NumberNotPaid']);
+                    $('.depart-number-all').html(data['NumberAll']);
+                    
+                    getDataGraph(data);//запись в глобальную переменную данных для графика
+                    
+                    costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
+                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    $('#departs-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
                 }
             });
+        }else{
+            costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
         }
     }
 
@@ -182,14 +214,16 @@ $(document).ready(function () {
         $('.number-paid').html("");
         $('.number-not-paid').html("");
         $('.number-all').html("");
-        
+        resGraph();
+
         data = {
             'csrfmiddlewaretoken' : csrf_token,
             'date1': $('#datetimepicker1').data('date'),            
-            'date2': $('#datetimepicker2').data('date')
+            'date2': $('#datetimepicker2').data('date'),
+            'statType': 'organization-stat',
         };
         $.ajax({
-            url: "/organization-statistics/",
+            url: "/get-data-for-stat/",
             type: "POST",
             dataType: "json",
             data: data,
@@ -200,6 +234,13 @@ $(document).ready(function () {
                 $('.number-paid').html(data['NumberNotPaid']);
                 $('.number-not-paid').html(data['NumberPaid']);
                 $('.number-all').html(data['NumberAll']);
+                
+                getDataGraph(data);//запись в глобальную переменную данных для графика
+
+                costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
+                $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                $('#organization-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
             }
         });
     }
@@ -221,6 +262,7 @@ $(document).ready(function () {
 	$('#statistics-tab a').click(function (e) {
         e.preventDefault()
         if($(this).parent().attr('class')!='active') {
+            clerEye();
             $(this).tab('show')
             var href = $(this).attr('href');
             conditionStatistics(href);
@@ -229,6 +271,7 @@ $(document).ready(function () {
 
     $('#button-show').click(function (e){
         e.preventDefault()
+        clerEye();
         var href = $('#statistics-tab li.active a').attr('href') 
         conditionStatistics(href);
     })
@@ -325,6 +368,23 @@ $(document).ready(function () {
         });
     });
 
+    $(".show-graph").click(function(){
+        if(!$(this).hasClass("active")){
+            $(this).parents("table").find("span.show-graph.active").removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open")
+            $(this).removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
+            var type = $(this).attr('data-type')
+            var sum = [];
+            if (type == "paid"){
+               sum = App.sumOnСostsPaid;
+            }else if(type == "not-paid"){
+                sum = App.sumOnСostsNotPaid;
+            }else if(type == "all"){
+               sum = App.sumOnСostsAll;
+            }
+            costsLineChart(sum,App.labels,App.result);
+        }
+    })
+
 	$(function () {
         $('#datetimepicker1').datetimepicker({
             locale: 'ru',
@@ -340,6 +400,10 @@ $(document).ready(function () {
             viewMode: 'days'
         });
     });
+
+    function clerEye(){
+        $('.show-graph').removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open");
+    }
 
     var $range = $(".js-range-slider");
 

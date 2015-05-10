@@ -53,3 +53,5 @@ textarea {resize: none}
 .linechart-text{margin-left: 20px;}
 
 .step-detail{margin-left: 10px;}
+
+.show-graph{cursor:pointer;}
