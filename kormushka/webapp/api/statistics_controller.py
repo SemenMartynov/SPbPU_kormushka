@@ -104,27 +104,21 @@ def getDetail(start_date,end_date,allDelta,deltaStep):
 	return {'detailByDays':detailByDays, 'detailByMonths':detailByMonths, 'detailByYears':detailByYears}
 
 #данные для грфика
-def graph(start_date,end_date,allDelta,deltaStep,purchase):
+def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat):
 	minDelta = datetime.timedelta(microseconds=1)
 	args = {}
+	if typeDetailStat != "first": detail = getDetail(start_date,end_date,allDelta,deltaStep)
 	#получение выкладки
-	if allDelta.days >=730:
-		sumYear = getGraphYear(start_date, end_date,minDelta,purchase)
-		args.update({'sumOfPeriods': sumYear['sum'],'labels':sumYear['label']})
-	# else:
-	# 	sumYear = {'label':[],'sum':[]}
+	if (allDelta.days >=730 and typeDetailStat == "first") or (typeDetailStat == "year" and detail.get('detailByYears')):
 
-	if allDelta.days >32 and allDelta.days < 730:
-		sumMonth = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep)
-		args.update({'sumOfPeriods': sumMonth['sum'],'labels':sumMonth['label']})
-	# else:
-	# 	sumMonth = {'label':[],'sum':[]}
-
-	if allDelta.days <=32:
-		sumDay = getGraphDay(start_date, end_date,minDelta,purchase,allDelta)
-		args.update({'sumOfPeriods': sumDay['sum'],'labels':sumDay['label']})
-	# else:
-	# 	sumDay = {'label':[],'sum':[]}
+		sumAll = getGraphYear(start_date, end_date,minDelta,purchase)
+	elif (allDelta.days >32 and allDelta.days < 730 and typeDetailStat == "first") or (typeDetailStat == "month" and detail.get('detailByMonths')):
+		sumAll = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep)
+	elif (allDelta.days <=32 and typeDetailStat == "first") or (typeDetailStat == "day" and detail.get('detailByDays')):
+		sumAll = getGraphDay(start_date, end_date,minDelta,purchase,allDelta)
+	else:
+		sumAll = {'label':[],'sum':[]}
+	args.update({'sumOfPeriods': sumAll['sum'],'labels':sumAll['label']})
 	return args
 
 def getDataForStat(request):
@@ -134,7 +128,8 @@ def getDataForStat(request):
 		pur = Purchase.objects.all()
 		date1 =  request.POST.get('date1')
 		date2 =  request.POST.get('date2')
-		statType = request.POST.get('statType')
+		typeStat = request.POST.get('typeStat')
+		typeDetailStat  = request.POST.get('typeDetailStat')
 		ForСostsAll = 0
 
 		if not date1 or not date2: 
@@ -155,7 +150,7 @@ def getDataForStat(request):
 			end_date = minMaxDate['maxDate']
 
 		#выбор варианта статистики
-		if statType == "personal-stat":
+		if typeStat == "personal-stat":
 			UserType = request.POST.get('typeUser')
 			if UserType == 'personal':
 				current_user_pk = auth.get_user(request).pk
@@ -174,11 +169,11 @@ def getDataForStat(request):
 				ForAllNumber = ForAllNumber + 1
 			if not ForСostsAll: ForСostsAll	 = 0
 			args.update({'ForСostsAll':round(ForСostsAll,2),'ForAllNumber':ForAllNumber})
-		elif statType == "organization-stat":
+		elif typeStat == "organization-stat":
 			purСostsPaid = pur.filter(state=1)
 			purСostsNotPaid = pur.filter(state=0)
 			purСostsAll = pur
-		elif statType == "depart-stat":
+		elif typeStat == "depart-stat":
 			departid =  request.POST.get('departid')
 			purСostsPaid = pur.filter(depart=departid, state=1)
 			purСostsNotPaid = pur.filter(depart=departid, state=0)
@@ -198,15 +193,15 @@ def getDataForStat(request):
 
 		СostsPaid = purСostsPaid.aggregate(sum=Sum('cost'),num=Count('id'))
 		if not СostsPaid['sum']: СostsPaid['sum'] = 0
-		resСostsPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsPaid)
+		resСostsPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsPaid,typeDetailStat)
 
 		СostsNotPaid = purСostsNotPaid.aggregate(sum=Sum('cost'),num=Count('id'))					
 		if not СostsNotPaid['sum']: СostsNotPaid['sum'] = 0
-		resСostsNotPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsNotPaid)
+		resСostsNotPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsNotPaid,typeDetailStat)
 
 		СostsAll = purСostsAll.aggregate(sum=Sum('cost'),num=Count('id'))		#затраты пользователя за весь период
 		if not СostsAll['sum']: СostsAll['sum'] = 0
-		resСostsAll = graph(start_date,end_date,allDelta,deltaStep,purСostsAll)
+		resСostsAll = graph(start_date,end_date,allDelta,deltaStep,purСostsAll,typeDetailStat)
 
 		if start_date > end_date:
 			result = False

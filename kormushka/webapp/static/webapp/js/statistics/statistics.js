@@ -49,17 +49,17 @@ $(document).ready(function () {
     function getHtmlDetail(Days, Months, Years){
         var strHtml = "";
         if(Days){
-            strHtml = strHtml + '<a class="detail-stat-year step-detail" data-type="year" data-toggle="modal" href="#">День</a>';
+            strHtml = strHtml + '<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">День</a>';
         }
         if(Months){
             strHtml = strHtml + '<a class="detail-stat-month step-detail" data-type="month" data-toggle="modal" href="#">Месяц</a>';
         }
         if(Years){
-            strHtml = strHtml + '<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">Год</a>';
+            strHtml = strHtml + '<a class="detail-stat-year step-detail" data-type="year" data-toggle="modal" href="#">Год</a>';
         }
-        // glyphicon glyphicon-eye-close
         return strHtml;
     }
+
 
     function getDataGraph(data){
         App.sumOnСostsPaid = data['sumOnСostsPaid'];
@@ -68,15 +68,17 @@ $(document).ready(function () {
         App.labels =  data['labels'];
         App.result = data['result'];
     }
-    function personalStatistics(){
-        $('.personal-costs-paid').html("");
-        $('.personal-costs-not-paid').html("");
-        $('.personal-costs-all').html("");
-        $('.for-personal-costs-all').html("");
-        $('.personal-number-paid').html("");
-        $('.personal-number-not-paid').html("");
-        $('.personal-number-all').html("");
-        $('.for-personal-number-all').html("");
+    function personalStatistics(typeDetailStat){
+        if(typeDetailStat == "first"){
+            $('.personal-costs-paid').html("");
+            $('.personal-costs-not-paid').html("");
+            $('.personal-costs-all').html("");
+            $('.for-personal-costs-all').html("");
+            $('.personal-number-paid').html("");
+            $('.personal-number-not-paid').html("");
+            $('.personal-number-all').html("");
+            $('.for-personal-number-all').html("");
+        }
         resGraph();
 
         start_date = $('#datetimepicker1').data('date');
@@ -84,7 +86,8 @@ $(document).ready(function () {
         data = {
         'csrfmiddlewaretoken' : csrf_token,
         'typeUser': 'personal',
-        'statType': 'personal-stat',
+        'typeStat': 'personal-stat',
+        'typeDetailStat': typeDetailStat,
         'date1': start_date,            
         'date2': end_date
         };
@@ -108,20 +111,23 @@ $(document).ready(function () {
                 costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
                 $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
                 $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                addClickDetail();
                 $('#personal-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
             },
         });
     }
 
     function usersStatistics(){
-        $('.user-costs-paid').html("");
-        $('.user-costs-not-paid').html("");
-        $('.user-costs-all').html("");
-        $('.for-user-all').html("");
-        $('.user-number-paid').html("");
-        $('.user-number-not-paid').html("");
-        $('.user-number-all').html("");
-        $('.for-user-number-all').html("");
+        if(typeDetailStat == "first"){
+            $('.user-costs-paid').html("");
+            $('.user-costs-not-paid').html("");
+            $('.user-costs-all').html("");
+            $('.for-user-all').html("");
+            $('.user-number-paid').html("");
+            $('.user-number-not-paid').html("");
+            $('.user-number-all').html("");
+            $('.for-user-number-all').html("");
+        }
         resGraph();
 
         user = $('#user-stat').attr("data-id");
@@ -131,7 +137,8 @@ $(document).ready(function () {
                 'date1': $('#datetimepicker1').data('date'),            
                 'date2': $('#datetimepicker2').data('date'),
                 'typeUser': 'users',
-                'statType': 'personal-stat',
+                'typeStat': 'personal-stat',
+                'typeDetailStat': typeDetailStat,
                 'userid': user,
             };
             $.ajax({
@@ -154,6 +161,7 @@ $(document).ready(function () {
                     costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
                     $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
                     $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    addClickDetail();
                     $('#users-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
                 }
             });
@@ -162,13 +170,15 @@ $(document).ready(function () {
     }
 
     function departsStatistics(){
-        $('.depart-costs-paid').html("");
-        $('.depart-costs-not-paid').html("");
-        $('.depart-costs-all').html("");
-        $('.for-depart-all').html("");
-        $('.depart-number-paid').html("");
-        $('.depart-number-not-paid').html("");
-        $('.depart-number-all').html("");
+        if(typeDetailStat == "first"){
+            $('.depart-costs-paid').html("");
+            $('.depart-costs-not-paid').html("");
+            $('.depart-costs-all').html("");
+            $('.for-depart-all').html("");
+            $('.depart-number-paid').html("");
+            $('.depart-number-not-paid').html("");
+            $('.depart-number-all').html("");
+        }
         resGraph();
 
         depart = $('#depart-stat').attr("data-id");
@@ -177,7 +187,8 @@ $(document).ready(function () {
             'csrfmiddlewaretoken' : csrf_token,
             'date1': $('#datetimepicker1').data('date'),            
             'date2': $('#datetimepicker2').data('date'),
-            'statType': 'depart-stat',
+            'typeStat': 'depart-stat',
+            'typeDetailStat': typeDetailStat,
             'departid': depart,
             };
             $.ajax({
@@ -199,6 +210,7 @@ $(document).ready(function () {
                     costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
                     $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
                     $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    addClickDetail();
                     $('#departs-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
                 }
             });
@@ -208,19 +220,22 @@ $(document).ready(function () {
     }
 
     function organizationStatistics(){
-        $('.costs-paid').html("");
-        $('.costs-not-paid').html("");
-        $('.costs-all').html("");
-        $('.number-paid').html("");
-        $('.number-not-paid').html("");
-        $('.number-all').html("");
+        if(typeDetailStat == "first"){
+            $('.costs-paid').html("");
+            $('.costs-not-paid').html("");
+            $('.costs-all').html("");
+            $('.number-paid').html("");
+            $('.number-not-paid').html("");
+            $('.number-all').html("");
+        }
         resGraph();
 
         data = {
             'csrfmiddlewaretoken' : csrf_token,
             'date1': $('#datetimepicker1').data('date'),            
             'date2': $('#datetimepicker2').data('date'),
-            'statType': 'organization-stat',
+            'typeStat': 'organization-stat',
+            'typeDetailStat': typeDetailStat,
         };
         $.ajax({
             url: "/get-data-for-stat/",
@@ -240,40 +255,43 @@ $(document).ready(function () {
                 costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
                 $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
                 $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                addClickDetail();
                 $('#organization-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
             }
         });
     }
 
-    function conditionStatistics (href){
+    function conditionStatistics (href,typeDetailStat){
         //Статистика личная
-        if(href=='#personal-statistics'){ personalStatistics() }
+        if(href=='#personal-statistics'){ personalStatistics(typeDetailStat); }
 
         //Статистика пользователя
-        if(href=='#users-statistics'){ usersStatistics(); }
+        if(href=='#users-statistics'){ usersStatistics(typeDetailStat); }
 
         //Статистика отдела
-        if(href=='#departs-statistics'){ departsStatistics();  }
+        if(href=='#departs-statistics'){ departsStatistics(typeDetailStat);  }
 
         //Статистика организации
-        if(href=='#organization-statistics'){ organizationStatistics(); }
+        if(href=='#organization-statistics'){ organizationStatistics(typeDetailStat); }
     }
 
 	$('#statistics-tab a').click(function (e) {
-        e.preventDefault()
+        e.preventDefault();
         if($(this).parent().attr('class')!='active') {
+            typeDetailStat = "first";
             clerEye();
-            $(this).tab('show')
+            $(this).tab('show');
             var href = $(this).attr('href');
-            conditionStatistics(href);
+            conditionStatistics(href,typeDetailStat);
         }	
 	})
 
     $('#button-show').click(function (e){
+        typeDetailStat = "first";
         e.preventDefault()
         clerEye();
-        var href = $('#statistics-tab li.active a').attr('href') 
-        conditionStatistics(href);
+        var href = $('#statistics-tab li.active a').attr('href');
+        conditionStatistics(href,typeDetailStat);
     })
 	
 	$( "#user-stat").autocomplete({
@@ -304,7 +322,7 @@ $(document).ready(function () {
         },
         minLength: 3,
         select: function( event, ui ) { //Выбор пункта
-        	$("#user-stat").attr("data-id",ui.item.userid)
+        	$("#user-stat").attr("data-id",ui.item.userid);
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -340,7 +358,7 @@ $(document).ready(function () {
         },
         minLength: 0,
         select: function( event, ui ) { //Выбор пункта
-        	$("#depart-stat").attr("data-id",ui.item.departid)
+        	$("#depart-stat").attr("data-id",ui.item.departid);
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -372,7 +390,7 @@ $(document).ready(function () {
         if(!$(this).hasClass("active")){
             $(this).parents("table").find("span.show-graph.active").removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open")
             $(this).removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
-            var type = $(this).attr('data-type')
+            var type = $(this).attr('data-type');
             var sum = [];
             if (type == "paid"){
                sum = App.sumOnСostsPaid;
@@ -405,7 +423,17 @@ $(document).ready(function () {
         $('.show-graph').removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open");
     }
 
+    function addClickDetail(){
+        $(".step-detail").click(function(e){
+            typeDetailStat = $(this).attr('data-type');
+            e.preventDefault()
+            clerEye();
+            var href = $('#statistics-tab li.active a').attr('href');
+            conditionStatistics(href,typeDetailStat);
+        });
+    }
+
     var $range = $(".js-range-slider");
 
-	personalStatistics("#personal-statistics"); // Select tab by name
+	personalStatistics("first"); // Select tab by name
 });
