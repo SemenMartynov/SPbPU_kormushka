@@ -29,21 +29,15 @@ $(document).ready(function () {
     function costsLineChart(data,labels,result){
         if(result){
             //  select template and inner elements for work
-
-
             //  http://www.chartjs.org/docs/#line-chart
             // https://github.com/nnnick/Chart.js/blob/master/samples/line.html
-
             //  check selected element
 
             lineChartData.labels = labels;
             lineChartData.datasets[0].data = data;
 
             lineChart.initialize(lineChartData);
-
-
         }
-        
     }
 
     function getHtmlDetail(Days, Months, Years){
@@ -60,7 +54,6 @@ $(document).ready(function () {
         return strHtml;
     }
 
-
     function getDataGraph(data){
         App.sumOnСostsPaid = data['sumOnСostsPaid'];
         App.sumOnСostsNotPaid = data['sumOnСostsNotPaid'];
@@ -68,211 +61,86 @@ $(document).ready(function () {
         App.labels =  data['labels'];
         App.result = data['result'];
     }
-    function personalStatistics(typeDetailStat){
-        if(typeDetailStat == "first"){
-            $('.personal-costs-paid').html("");
-            $('.personal-costs-not-paid').html("");
-            $('.personal-costs-all').html("");
-            $('.for-personal-costs-all').html("");
-            $('.personal-number-paid').html("");
-            $('.personal-number-not-paid').html("");
-            $('.personal-number-all').html("");
-            $('.for-personal-number-all').html("");
-        }
-        resGraph();
 
-        start_date = $('#datetimepicker1').data('date');
-        end_date = $('#datetimepicker2').data('date');
-        data = {
-        'csrfmiddlewaretoken' : csrf_token,
-        'typeUser': 'personal',
-        'typeStat': 'personal-stat',
-        'typeDetailStat': typeDetailStat,
-        'date1': start_date,            
-        'date2': end_date
-        };
-        $.ajax({
-            url: "/get-data-for-stat/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function(data) {
-                $('.personal-costs-paid').html(data['СostsPaid']);
-                $('.personal-costs-not-paid').html(data['СostsNotPaid']);
-                $('.personal-costs-all').html(data['СostsAll']);
-                $('.for-personal-costs-all').html(data['ForСostsAll']);
-                $('.personal-number-paid').html(data['NumberPaid']);
-                $('.personal-number-not-paid').html(data['NumberNotPaid']);
-                $('.personal-number-all').html(data['NumberAll']);
-                $('.for-personal-number-all').html(data['ForAllNumber']);
-                
-                getDataGraph(data);//запись в глобальную переменную данных для графика
+    function conditionStatistics(href,typeDetailStat){
+        var error = true;
+        var ctx = $(href);
+        var user = $('#user-stat').attr("data-id");
+        var depart = $('#depart-stat').attr("data-id");
+        var start_date = $('#datetimepicker1').data('date');
+        var end_date = $('#datetimepicker2').data('date');
+        var typeStat = "";
+        var typeUser = "";
+        var ajax_request = "";
 
-                costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-                $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
-                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
-                addClickDetail();
-                $('#personal-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
-            },
-        });
-    }
-
-    function usersStatistics(){
-        if(typeDetailStat == "first"){
-            $('.user-costs-paid').html("");
-            $('.user-costs-not-paid').html("");
-            $('.user-costs-all').html("");
-            $('.for-user-all').html("");
-            $('.user-number-paid').html("");
-            $('.user-number-not-paid').html("");
-            $('.user-number-all').html("");
-            $('.for-user-number-all').html("");
-        }
-        resGraph();
-
-        user = $('#user-stat').attr("data-id");
-        if(user){
-            data = {
-                'csrfmiddlewaretoken' : csrf_token,
-                'date1': $('#datetimepicker1').data('date'),            
-                'date2': $('#datetimepicker2').data('date'),
-                'typeUser': 'users',
-                'typeStat': 'personal-stat',
-                'typeDetailStat': typeDetailStat,
-                'userid': user,
-            };
-            $.ajax({
-                url: "/get-data-for-stat/",
-                type: "POST",
-                dataType: "json",
-                data: data,
-                success: function( data ) {
-                    $('.user-costs-paid').html(data['СostsPaid']);
-                    $('.user-costs-not-paid').html(data['СostsNotPaid']);
-                    $('.user-costs-all').html(data['СostsAll']);
-                    $('.for-user-all').html(data['ForСostsAll']);  
-                    $('.user-number-paid').html(data['NumberPaid']);
-                    $('.user-number-not-paid').html(data['NumberNotPaid']);
-                    $('.user-number-all').html(data['NumberAll']);
-                    $('.for-user-number-all').html(data['ForAllNumber']); 
-
-                    getDataGraph(data);//запись в глобальную переменную данных для графика
-
-                    costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
-                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
-                    addClickDetail();
-                    $('#users-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
-                }
-            });
-        }
-        costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-    }
-
-    function departsStatistics(){
-        if(typeDetailStat == "first"){
-            $('.depart-costs-paid').html("");
-            $('.depart-costs-not-paid').html("");
-            $('.depart-costs-all').html("");
-            $('.for-depart-all').html("");
-            $('.depart-number-paid').html("");
-            $('.depart-number-not-paid').html("");
-            $('.depart-number-all').html("");
-        }
-        resGraph();
-
-        depart = $('#depart-stat').attr("data-id");
-        if(depart){
-            data = {
-            'csrfmiddlewaretoken' : csrf_token,
-            'date1': $('#datetimepicker1').data('date'),            
-            'date2': $('#datetimepicker2').data('date'),
-            'typeStat': 'depart-stat',
-            'typeDetailStat': typeDetailStat,
-            'departid': depart,
-            };
-            $.ajax({
-                url: "/get-data-for-stat/",
-                type: "POST",
-                dataType: "json",
-                data: data,
-                success: function( data ) {
-                    $('.depart-costs-paid').html(data['СostsPaid']);
-                    $('.depart-costs-not-paid').html(data['СostsNotPaid']);
-                    $('.depart-costs-all').html(data['СostsAll']);
-                    $('.for-depart-all').html(data['ForСostsAll']);
-                    $('.depart-number-paid').html(data['NumberPaid']);
-                    $('.depart-number-not-paid').html(data['NumberNotPaid']);
-                    $('.depart-number-all').html(data['NumberAll']);
-                    
-                    getDataGraph(data);//запись в глобальную переменную данных для графика
-                    
-                    costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
-                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
-                    addClickDetail();
-                    $('#departs-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
-                }
-            });
-        }else{
-            costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-        }
-    }
-
-    function organizationStatistics(){
         if(typeDetailStat == "first"){
             $('.costs-paid').html("");
             $('.costs-not-paid').html("");
             $('.costs-all').html("");
+            $('.for-costs-all').html("");
             $('.number-paid').html("");
             $('.number-not-paid').html("");
             $('.number-all').html("");
+            $('.for-number-all').html("");
         }
         resGraph();
 
-        data = {
-            'csrfmiddlewaretoken' : csrf_token,
-            'date1': $('#datetimepicker1').data('date'),            
-            'date2': $('#datetimepicker2').data('date'),
-            'typeStat': 'organization-stat',
-            'typeDetailStat': typeDetailStat,
-        };
-        $.ajax({
-            url: "/get-data-for-stat/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function( data ) {
-                $('.costs-paid').html(data['СostsNotPaid']);
-                $('.costs-not-paid').html(data['СostsPaid']);
-                $('.costs-all').html(data['СostsAll']);
-                $('.number-paid').html(data['NumberNotPaid']);
-                $('.number-not-paid').html(data['NumberPaid']);
-                $('.number-all').html(data['NumberAll']);
-                
-                getDataGraph(data);//запись в глобальную переменную данных для графика
-
-                costsLineChart(App.sumOnСostsPaid,App.labels,App.result);
-                $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
-                $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
-                addClickDetail();
-                $('#organization-statistics').find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
+        if(href == "#personal-statistics"){
+            typeStat = "personal-stat";
+            typeUser = "personal";
+            error = false;
+        } else if(href == "#users-statistics" && user){
+            typeStat = "personal-stat";
+            typeUser = "users";
+            error = false;
+        } else if(href == "#departs-statistics" && depart){
+            typeStat = "depart-stat";
+            error = false;
+        } else if(href == "#organization-statistics"){
+            typeStat = "organization-stat";
+            error = false;
+        }
+        if(!error){
+            if (ajax_request) {
+                ajax_request.abort();
             }
-        });
-    }
+            data = {
+            'csrfmiddlewaretoken' : csrf_token,
+            'typeUser': typeUser,
+            'typeStat': typeStat,
+            'typeDetailStat': typeDetailStat,
+            'date1': start_date,            
+            'date2': end_date,
+            'userid': user,
+            'departid': depart,
+            };
+            ajax_request = $.ajax({
+                url: "/get-data-for-stat/",
+                type: "POST",
+                dataType: "json",
+                data: data,
+                success: function(data) {
+                    $(ctx).find('.costs-paid').html(data['СostsPaid']);
+                    $(ctx).find('.costs-not-paid').html(data['СostsNotPaid']);
+                    $(ctx).find('.costs-all').html(data['СostsAll']);
+                    $(ctx).find('.for-costs-all').html(data['ForСostsAll']);
+                    $(ctx).find('.number-paid').html(data['NumberPaid']);
+                    $(ctx).find('.number-not-paid').html(data['NumberNotPaid']);
+                    $(ctx).find('.number-all').html(data['NumberAll']);
+                    $(ctx).find('.for-number-all').html(data['ForAllNumber']);
+                    
+                    getDataGraph(data);//запись в глобальную переменную данных для графика
 
-    function conditionStatistics (href,typeDetailStat){
-        //Статистика личная
-        if(href=='#personal-statistics'){ personalStatistics(typeDetailStat); }
-
-        //Статистика пользователя
-        if(href=='#users-statistics'){ usersStatistics(typeDetailStat); }
-
-        //Статистика отдела
-        if(href=='#departs-statistics'){ departsStatistics(typeDetailStat);  }
-
-        //Статистика организации
-        if(href=='#organization-statistics'){ organizationStatistics(typeDetailStat); }
+                    costsLineChart(App.sumOnСostsAll,App.labels,App.result);
+                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    addClickDetail();
+                    $(ctx).find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
+                },
+            });
+        }else{
+            costsLineChart(App.sumOnСostsAll,App.labels,App.result);
+        }
     }
 
 	$('#statistics-tab a').click(function (e) {
@@ -435,5 +303,5 @@ $(document).ready(function () {
 
     var $range = $(".js-range-slider");
 
-	personalStatistics("first"); // Select tab by name
+	conditionStatistics("#personal-statistics","first"); // Select tab by name
 });
