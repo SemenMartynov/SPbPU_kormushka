@@ -107,18 +107,21 @@ def getDetail(start_date,end_date,allDelta,deltaStep):
 def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat):
 	minDelta = datetime.timedelta(microseconds=1)
 	args = {}
+	targetDetail = ""
 	if typeDetailStat != "first": detail = getDetail(start_date,end_date,allDelta,deltaStep)
 	#получение выкладки
 	if (allDelta.days >=730 and typeDetailStat == "first") or (typeDetailStat == "year" and detail.get('detailByYears')):
-
 		sumAll = getGraphYear(start_date, end_date,minDelta,purchase)
+		targetDetail = "detail-stat-year"
 	elif (allDelta.days >32 and allDelta.days < 730 and typeDetailStat == "first") or (typeDetailStat == "month" and detail.get('detailByMonths')):
 		sumAll = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep)
+		targetDetail = "detail-stat-month"
 	elif (allDelta.days <=32 and typeDetailStat == "first") or (typeDetailStat == "day" and detail.get('detailByDays')):
 		sumAll = getGraphDay(start_date, end_date,minDelta,purchase,allDelta)
+		targetDetail = "detail-stat-day"
 	else:
 		sumAll = {'label':[],'sum':[]}
-	args.update({'sumOfPeriods': sumAll['sum'],'labels':sumAll['label']})
+	args.update({'sumOfPeriods': sumAll['sum'],'labels':sumAll['label'],'targetDetail':targetDetail})
 	return args
 
 def getDataForStat(request):
@@ -207,18 +210,18 @@ def getDataForStat(request):
 			result = False
 			args.update({'result':result})
 		else:
-			args.update({'sumOnСostsPaid':resСostsPaid.get('sumOfPeriods'), 'labels':resСostsPaid.get('labels')})
-			args.update({'sumOnСostsNotPaid':resСostsNotPaid.get('sumOfPeriods'), 'labels':resСostsNotPaid.get('labels')})
-			args.update({'sumOnСostsAll':resСostsAll.get('sumOfPeriods'), 'labels':resСostsAll.get('labels')})
 			result = True
-			args.update({'result':result})
+			args.update({'sumOnСostsPaid':resСostsPaid.get('sumOfPeriods'), 'labels':resСostsPaid.get('labels'),
+						'sumOnСostsNotPaid':resСostsNotPaid.get('sumOfPeriods'), 'labels':resСostsNotPaid.get('labels'),
+						'sumOnСostsAll':resСostsAll.get('sumOfPeriods'), 'labels':resСostsAll.get('labels'),
+						'result':result})
 
 		#возможность детализации на графике
 		args.update(getDetail(start_date,end_date,allDelta,deltaStep))
 
 		args.update({'СostsPaid':СostsPaid['sum'], 'СostsNotPaid':СostsNotPaid['sum'], 'СostsAll':СostsAll['sum'],
 					'NumberPaid':СostsPaid['num'], 'NumberNotPaid':СostsNotPaid['num'], 'NumberAll':СostsAll['num'],
-					'start_date':start_date.strftime("%d.%m.%Y"), 'end_date':end_date.strftime("%d.%m.%Y")})
+					'start_date':start_date.strftime("%d.%m.%Y"), 'end_date':end_date.strftime("%d.%m.%Y"), 'targetDetail':resСostsPaid.get('targetDetail')})
 
 		return HttpResponse(json.dumps(args))
 	raise Http404

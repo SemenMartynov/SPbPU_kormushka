@@ -72,6 +72,7 @@ $(document).ready(function () {
         var typeStat = "";
         var typeUser = "";
         var ajax_request = "";
+        var inform = "";
 
         if(typeDetailStat == "first"){
             $('.costs-paid').html("");
@@ -82,6 +83,8 @@ $(document).ready(function () {
             $('.number-not-paid').html("");
             $('.number-all').html("");
             $('.for-number-all').html("");
+            $(".linechart-text").html("");
+            $(".detail-stat").html("");
         }
         resGraph();
 
@@ -92,12 +95,15 @@ $(document).ready(function () {
         } else if(href == "#users-statistics" && user){
             typeStat = "personal-stat";
             typeUser = "users";
+            inform = " для пользователя: " + App.UserName;
             error = false;
         } else if(href == "#departs-statistics" && depart){
             typeStat = "depart-stat";
+            inform = " для отдела: " + App.DepartName;
             error = false;
         } else if(href == "#organization-statistics"){
             typeStat = "organization-stat";
+            inform = " для организации"
             error = false;
         }
         if(!error){
@@ -120,6 +126,8 @@ $(document).ready(function () {
                 dataType: "json",
                 data: data,
                 success: function(data) {
+                    console.log(data);
+                    $(ctx).find('.show-graph').show();
                     $(ctx).find('.costs-paid').html(data['СostsPaid']);
                     $(ctx).find('.costs-not-paid').html(data['СostsNotPaid']);
                     $(ctx).find('.costs-all').html(data['СostsAll']);
@@ -132,13 +140,14 @@ $(document).ready(function () {
                     getDataGraph(data);//запись в глобальную переменную данных для графика
 
                     costsLineChart(App.sumOnСostsAll,App.labels,App.result);
-                    $(".linechart-text").html("С " + data['start_date'] + " по " + data['end_date']);
+                    $(".linechart-text").html("С <b>" + data['start_date'] + "</b> по <b>" + data['end_date'] + "</b>" + inform);
                     $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
-                    addClickDetail();
+                    addClickDetail(data['targetDetail']);
                     $(ctx).find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
                 },
             });
         }else{
+            $(ctx).find('.show-graph').hide();
             costsLineChart(App.sumOnСostsAll,App.labels,App.result);
         }
     }
@@ -191,6 +200,7 @@ $(document).ready(function () {
         minLength: 3,
         select: function( event, ui ) { //Выбор пункта
         	$("#user-stat").attr("data-id",ui.item.userid);
+            App.UserName = ui.item.label;
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -227,6 +237,7 @@ $(document).ready(function () {
         minLength: 0,
         select: function( event, ui ) { //Выбор пункта
         	$("#depart-stat").attr("data-id",ui.item.departid);
+            App.DepartName = ui.item.label;
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -238,20 +249,25 @@ $(document).ready(function () {
 
     $( ".period-purchase").click(function (){
         var type = $(this).attr('data-type');
-        data = {
-            'csrfmiddlewaretoken' : csrf_token,
-            'type': type,
-        };
-        $.ajax({
-            url: "/get-date-for-period/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function( data ) {
-                $('#datetimepicker1').data("DateTimePicker").date(data['date1']);
-                $('#datetimepicker2').data("DateTimePicker").date(data['date2']);
-            }
-        });
+        if(type == "all"){
+            $('#datetimepicker1').data("DateTimePicker").date(null);
+            $('#datetimepicker2').data("DateTimePicker").date(null);
+        }else{
+            data = {
+                'csrfmiddlewaretoken' : csrf_token,
+                'type': type,
+            };
+            $.ajax({
+                url: "/get-date-for-period/",
+                type: "POST",
+                dataType: "json",
+                data: data,
+                success: function( data ) {
+                    $('#datetimepicker1').data("DateTimePicker").date(data['date1']);
+                    $('#datetimepicker2').data("DateTimePicker").date(data['date2']);
+                }
+            });
+        } 
     });
 
     $(".show-graph").click(function(){
@@ -291,7 +307,7 @@ $(document).ready(function () {
         $('.show-graph').removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open");
     }
 
-    function addClickDetail(){
+    function addClickDetail(target){
         $(".step-detail").click(function(e){
             typeDetailStat = $(this).attr('data-type');
             e.preventDefault()
@@ -299,6 +315,7 @@ $(document).ready(function () {
             var href = $('#statistics-tab li.active a').attr('href');
             conditionStatistics(href,typeDetailStat);
         });
+        $(".step-detail." + target).addClass("target-detail");
     }
 
     var $range = $(".js-range-slider");
