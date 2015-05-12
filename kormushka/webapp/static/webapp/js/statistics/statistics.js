@@ -1,168 +1,173 @@
 $(document).ready(function () {
 
-    function personalStatistics(){
-        $('.personal-costs-paid').html("");
-        $('.personal-costs-not-paid').html("");
-        $('.personal-costs-all').html("");
-        $('.for-personal-costs-all').html("");
-        $('.personal-number-paid').html("");
-        $('.personal-number-not-paid').html("");
-        $('.personal-number-all').html("");
-        $('.for-personal-number-all').html("");
+    var template = $("#test-chart-template");
+    if (!template[0]) return;
+    var listChartContainer = template.find("#test-linechart");
 
-        data = {
-        'csrfmiddlewaretoken' : csrf_token,
-        'type': 'personal',
-        'date1': $('#datetimepicker1').data('date'),            
-        'date2': $('#datetimepicker2').data('date')
-        };
-        $.ajax({
-            url: "/personal-statistics/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function( data ) {
-                $('.personal-costs-paid').html(data['UserСostsPaid']);
-                $('.personal-costs-not-paid').html(data['UserСostsNotPaid']);
-                $('.personal-costs-all').html(data['UserСostsAll']);
-                $('.for-personal-costs-all').html(data['ForUserСostsAll']);
-                $('.personal-number-paid').html(data['UserNumberPaid']);
-                $('.personal-number-not-paid').html(data['UserNumberNotPaid']);
-                $('.personal-number-all').html(data['UserNumberAll']);
-                $('.for-personal-number-all').html(data['ForUserAllNumber']);
+    var lineChartData = {
+        labels : [],
+        datasets : [
+            {
+                label: "My First dataset",
+                fillColor : "rgba(151,187,205,0.2)",
+                strokeColor : "rgba(151,187,205,1)",
+                pointColor : "rgba(151,187,205,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(220,220,220,1)",
+                data : []
             },
-        });
-    }
+        ]
+    };
 
-    function usersStatistics(){
-        $('.user-costs-paid').html("");
-        $('.user-costs-not-paid').html("");
-        $('.user-costs-all').html("");
-        $('.for-user-all').html("");
-        $('.user-number-paid').html("");
-        $('.user-number-not-paid').html("");
-        $('.user-number-all').html("");
-        $('.for-user-number-all').html("");
+    var ctx = listChartContainer[0].getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+    var chart = new Chart(ctx);
+    var lineChart = chart.Line(lineChartData, {
+        responsive: true,
+    });
 
-        user = $('#user-stat').attr("data-id");
-        if(user){
-            data = {
-                'csrfmiddlewaretoken' : csrf_token,
-                'date1': $('#datetimepicker1').data('date'),            
-                'date2': $('#datetimepicker2').data('date'),
-                'type': 'users',
-                'userid': user,
-            };
-            $.ajax({
-                url: "/personal-statistics/",
-                type: "POST",
-                dataType: "json",
-                data: data,
-                success: function( data ) {
-                    $('.user-costs-paid').html(data['UserСostsPaid']);
-                    $('.user-costs-not-paid').html(data['UserСostsNotPaid']);
-                    $('.user-costs-all').html(data['UserСostsAll']);
-                    $('.for-user-all').html(data['ForUserСostsAll']);  
-                    $('.user-number-paid').html(data['UserNumberPaid']);
-                    $('.user-number-not-paid').html(data['UserNumberNotPaid']);
-                    $('.user-number-all').html(data['UserNumberAll']);
-                    $('.for-user-number-all').html(data['ForUserAllNumber']);  
-                }
-            });
+    function costsLineChart(data,labels,result){
+        if(result){
+            //  select template and inner elements for work
+            //  http://www.chartjs.org/docs/#line-chart
+            // https://github.com/nnnick/Chart.js/blob/master/samples/line.html
+            //  check selected element
+
+            lineChartData.labels = labels;
+            lineChartData.datasets[0].data = data;
+
+            lineChart.initialize(lineChartData);
         }
     }
 
-    function departsStatistics(){
-        $('.depart-costs-paid').html("");
-        $('.depart-costs-not-paid').html("");
-        $('.depart-costs-all').html("");
-        $('.for-depart-all').html("");
-        $('.depart-number-paid').html("");
-        $('.depart-number-not-paid').html("");
-        $('.depart-number-all').html("");
+    function getHtmlDetail(Days, Months, Years){
+        var strHtml = "";
+        if(Days){
+            strHtml = strHtml + '<a class="detail-stat-day step-detail" data-type="day" data-toggle="modal" href="#">День</a>';
+        }
+        if(Months){
+            strHtml = strHtml + '<a class="detail-stat-month step-detail" data-type="month" data-toggle="modal" href="#">Месяц</a>';
+        }
+        if(Years){
+            strHtml = strHtml + '<a class="detail-stat-year step-detail" data-type="year" data-toggle="modal" href="#">Год</a>';
+        }
+        return strHtml;
+    }
 
-        depart = $('#depart-stat').attr("data-id");
-        if(depart){
+    function getDataGraph(data){
+        App.sumOnСostsPaid = data['sumOnСostsPaid'];
+        App.sumOnСostsNotPaid = data['sumOnСostsNotPaid'];
+        App.sumOnСostsAll = data['sumOnСostsAll'];
+        App.labels =  data['labels'];
+        App.result = data['result'];
+    }
+
+    function conditionStatistics(href,typeDetailStat){
+        var error = true;
+        var ctx = $(href);
+        var user = $('#user-stat').attr("data-id");
+        var depart = $('#depart-stat').attr("data-id");
+        var start_date = $('#datetimepicker1').data('date');
+        var end_date = $('#datetimepicker2').data('date');
+        var typeStat = "";
+        var typeUser = "";
+        var ajax_request = "";
+        var inform = "";
+
+        if(typeDetailStat == "first"){
+            $('.costs-paid').html("");
+            $('.costs-not-paid').html("");
+            $('.costs-all').html("");
+            $('.for-costs-all').html("");
+            $('.number-paid').html("");
+            $('.number-not-paid').html("");
+            $('.number-all').html("");
+            $('.for-number-all').html("");
+            $(".linechart-text").html("");
+            $(".detail-stat").html("");
+        }
+        resGraph();
+
+        if(href == "#personal-statistics"){
+            typeStat = "personal-stat";
+            typeUser = "personal";
+            error = false;
+        } else if(href == "#users-statistics" && user){
+            typeStat = "personal-stat";
+            typeUser = "users";
+            inform = " для пользователя: " + App.UserName;
+            error = false;
+        } else if(href == "#departs-statistics" && depart){
+            typeStat = "depart-stat";
+            inform = " для отдела: " + App.DepartName;
+            error = false;
+        } else if(href == "#organization-statistics"){
+            typeStat = "organization-stat";
+            inform = " для организации"
+            error = false;
+        }
+        if(!error){
+            if (ajax_request) {
+                ajax_request.abort();
+            }
             data = {
             'csrfmiddlewaretoken' : csrf_token,
-            'date1': $('#datetimepicker1').data('date'),            
-            'date2': $('#datetimepicker2').data('date'),
+            'typeUser': typeUser,
+            'typeStat': typeStat,
+            'typeDetailStat': typeDetailStat,
+            'date1': start_date,            
+            'date2': end_date,
+            'userid': user,
             'departid': depart,
             };
-            $.ajax({
-                url: "/departs-statistics/",
+            ajax_request = $.ajax({
+                url: "/get-data-for-stat/",
                 type: "POST",
                 dataType: "json",
                 data: data,
-                success: function( data ) {
-                    $('.depart-costs-paid').html(data['DepartСostsPaid']);
-                    $('.depart-costs-not-paid').html(data['DepartСostsNotPaid']);
-                    $('.depart-costs-all').html(data['DepartСostsAll']);
-                    $('.for-depart-all').html(data['ForDepartAll']);
-                    $('.depart-number-paid').html(data['DepartNumberPaid']);
-                    $('.depart-number-not-paid').html(data['DepartNumberNotPaid']);
-                    $('.depart-number-all').html(data['DepartNumberAll']); 
-                }
+                success: function(data) {
+                    $(ctx).find('.show-graph').show();
+                    $(ctx).find('.costs-paid').html(data['СostsPaid']);
+                    $(ctx).find('.costs-not-paid').html(data['СostsNotPaid']);
+                    $(ctx).find('.costs-all').html(data['СostsAll']);
+                    $(ctx).find('.for-costs-all').html(data['ForСostsAll']);
+                    $(ctx).find('.number-paid').html(data['NumberPaid']);
+                    $(ctx).find('.number-not-paid').html(data['NumberNotPaid']);
+                    $(ctx).find('.number-all').html(data['NumberAll']);
+                    $(ctx).find('.for-number-all').html(data['ForAllNumber']);
+                    
+                    getDataGraph(data);//запись в глобальную переменную данных для графика
+
+                    costsLineChart(App.sumOnСostsAll,App.labels,App.result);
+                    $(".linechart-text").html("С <b>" + data['start_date'] + "</b> по <b>" + data['end_date'] + "</b>" + inform);
+                    $('.detail-stat').html(getHtmlDetail(data['detailByDays'],data['detailByMonths'],data['detailByYears']));
+                    addClickDetail(data['targetDetail']);
+                    $(ctx).find(".show-graph:nth(2)").removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
+                },
             });
+        }else{
+            $(ctx).find('.show-graph').hide();
+            costsLineChart(App.sumOnСostsAll,App.labels,App.result);
         }
-    }
-
-    function organizationStatistics(){
-        $('.costs-paid').html("");
-        $('.costs-not-paid').html("");
-        $('.costs-all').html("");
-        $('.number-paid').html("");
-        $('.number-not-paid').html("");
-        $('.number-all').html("");
-        
-        data = {
-            'csrfmiddlewaretoken' : csrf_token,
-            'date1': $('#datetimepicker1').data('date'),            
-            'date2': $('#datetimepicker2').data('date')
-        };
-        $.ajax({
-            url: "/organization-statistics/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function( data ) {
-                $('.costs-paid').html(data['СostsNotPaid']);
-                $('.costs-not-paid').html(data['СostsPaid']);
-                $('.costs-all').html(data['СostsAll']);
-                $('.number-paid').html(data['NumberNotPaid']);
-                $('.number-not-paid').html(data['NumberPaid']);
-                $('.number-all').html(data['NumberAll']);
-            }
-        });
-    }
-
-    function conditionStatistics (href){
-        //Статистика личная
-        if(href=='#personal-statistics'){ personalStatistics() }
-
-        //Статистика пользователя
-        if(href=='#users-statistics'){ usersStatistics(); }
-
-        //Статистика отдела
-        if(href=='#departs-statistics'){ departsStatistics();  }
-
-        //Статистика организации
-        if(href=='#organization-statistics'){ organizationStatistics(); }
     }
 
 	$('#statistics-tab a').click(function (e) {
-        e.preventDefault()
+        e.preventDefault();
         if($(this).parent().attr('class')!='active') {
-            $(this).tab('show')
+            typeDetailStat = "first";
+            clerEye();
+            $(this).tab('show');
             var href = $(this).attr('href');
-            conditionStatistics(href);
+            conditionStatistics(href,typeDetailStat);
         }	
 	})
 
     $('#button-show').click(function (e){
+        typeDetailStat = "first";
         e.preventDefault()
-        var href = $('#statistics-tab li.active a').attr('href') 
-        conditionStatistics(href);
+        clerEye();
+        var href = $('#statistics-tab li.active a').attr('href');
+        conditionStatistics(href,typeDetailStat);
     })
 	
 	$( "#user-stat").autocomplete({
@@ -193,7 +198,8 @@ $(document).ready(function () {
         },
         minLength: 3,
         select: function( event, ui ) { //Выбор пункта
-        	$("#user-stat").attr("data-id",ui.item.userid)
+        	$("#user-stat").attr("data-id",ui.item.userid);
+            App.UserName = ui.item.label;
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -229,7 +235,8 @@ $(document).ready(function () {
         },
         minLength: 0,
         select: function( event, ui ) { //Выбор пункта
-        	$("#depart-stat").attr("data-id",ui.item.departid)
+        	$("#depart-stat").attr("data-id",ui.item.departid);
+            App.DepartName = ui.item.label;
         },
         open: function() { //открытие списка
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -241,21 +248,43 @@ $(document).ready(function () {
 
     $( ".period-purchase").click(function (){
         var type = $(this).attr('data-type');
-        data = {
-            'csrfmiddlewaretoken' : csrf_token,
-            'type': type,
-        };
-        $.ajax({
-            url: "/get-date-for-period/",
-            type: "POST",
-            dataType: "json",
-            data: data,
-            success: function( data ) {
-                $('#datetimepicker1').data("DateTimePicker").date(data['date1']);
-                $('#datetimepicker2').data("DateTimePicker").date(data['date2']);
-            }
-        });
+        if(type == "all"){
+            $('#datetimepicker1').data("DateTimePicker").date(null);
+            $('#datetimepicker2').data("DateTimePicker").date(null);
+        }else{
+            data = {
+                'csrfmiddlewaretoken' : csrf_token,
+                'type': type,
+            };
+            $.ajax({
+                url: "/get-date-for-period/",
+                type: "POST",
+                dataType: "json",
+                data: data,
+                success: function( data ) {
+                    $('#datetimepicker1').data("DateTimePicker").date(data['date1']);
+                    $('#datetimepicker2').data("DateTimePicker").date(data['date2']);
+                }
+            });
+        } 
     });
+
+    $(".show-graph").click(function(){
+        if(!$(this).hasClass("active")){
+            $(this).parents("table").find("span.show-graph.active").removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open")
+            $(this).removeClass("glyphicon-eye-open").addClass("glyphicon-eye-close active")
+            var type = $(this).attr('data-type');
+            var sum = [];
+            if (type == "paid"){
+               sum = App.sumOnСostsPaid;
+            }else if(type == "not-paid"){
+                sum = App.sumOnСostsNotPaid;
+            }else if(type == "all"){
+               sum = App.sumOnСostsAll;
+            }
+            costsLineChart(sum,App.labels,App.result);
+        }
+    })
 
 	$(function () {
         $('#datetimepicker1').datetimepicker({
@@ -273,5 +302,22 @@ $(document).ready(function () {
         });
     });
 
-	personalStatistics("#personal-statistics"); // Select tab by name
+    function clerEye(){
+        $('.show-graph').removeClass("active glyphicon-eye-close").addClass("glyphicon-eye-open");
+    }
+
+    function addClickDetail(target){
+        $(".step-detail").click(function(e){
+            typeDetailStat = $(this).attr('data-type');
+            e.preventDefault()
+            clerEye();
+            var href = $('#statistics-tab li.active a').attr('href');
+            conditionStatistics(href,typeDetailStat);
+        });
+        $(".step-detail." + target).addClass("target-detail");
+    }
+
+    var $range = $(".js-range-slider");
+
+	conditionStatistics("#personal-statistics","first"); // Select tab by name
 });

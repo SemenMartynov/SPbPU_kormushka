@@ -24,6 +24,7 @@
     </div>
     <div class="row">
   		<div class="col-sm-offset-7 col-sm-5">
+  			<a class="show-all period-purchase" data-type="all" data-toggle="modal" href="#">Весь</a>
   			<a class="show-year period-purchase" data-type="year" data-toggle="modal" href="#">Год</a>
   			<a class="show-month period-purchase" data-type="month" data-toggle="modal" href="#">Месяц</a>
   			<a class="show-week period-purchase" data-type="week" data-toggle="modal" href="#">Неделя</a>
@@ -48,29 +49,33 @@
 				<th>Категория</th>
 				<th>Покупки</th>
 				<th>Сумма</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>Оплаченные покупки</td>
-				<td><span class="personal-number-paid"></span></td>
-				<td><span class="personal-costs-paid"></span></td>
+				<td><span class="number-paid"></span></td>
+				<td><span class="costs-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="paid"></span></td>
 			</tr>
 			<tr>
 				<td>Неоплаченные покупки</td>
-				<td><span class="personal-number-not-paid"></span></td>
-				<td><span class="personal-costs-not-paid"></span></td>
+				<td><span class="number-not-paid"></span></td>
+				<td><span class="costs-not-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="not-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Всего покупок</td>
-				<td><span class="personal-number-all"></span></td>
-				<td><span class="personal-costs-all"></span></td>
+				<td><span class="number-all"></span></td>
+				<td><span class="costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="all"></span></td>
 			</tr>
 			<tr>
 				<td>Затраты на пользователя</td>
-				<td><span class="for-personal-number-all"></span></td>
-				<td><span class="for-personal-costs-all"></span></td>
-
+				<td><span class="for-number-all"></span></td>
+				<td><span class="for-costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="for-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
@@ -86,28 +91,33 @@
 				<th>Категория</th>
 				<th>Покупки</th>
 				<th>Сумма</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>Оплаченные покупки</td>
-				<td><span class="user-number-paid"></span></td>
-				<td><span class="user-costs-paid"></span></td>
+				<td><span class="number-paid"></span></td>
+				<td><span class="costs-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="paid"></span></td>
 			</tr>
 			<tr>
 				<td>Неоплаченные покупки</td>
-				<td><span class="user-number-not-paid"></span></td>
-				<td><span class="user-costs-not-paid"></span></td>
+				<td><span class="number-not-paid"></span></td>
+				<td><span class="costs-not-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="not-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Всего покупок</td>
-				<td><span class="user-number-all"></span></td>
-				<td><span class="user-costs-all"></span></td>
+				<td><span class="number-all"></span></td>
+				<td><span class="costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="all"></span></td>
 			</tr>
 			<tr>
 				<td>Затраты на пользователя</td>
-				<td><span class="for-user-number-all"></span></td>
-				<td><span class="for-user-all"></span></td>
+				<td><span class="for-number-all"></span></td>
+				<td><span class="for-costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="for-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
@@ -123,28 +133,33 @@
 				<th>Категория</th>
 				<th>Покупки</th>
 				<th>Сумма</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>Оплаченные покупки</td>
-				<td><span class="depart-number-paid"></span></td>
-				<td><span class="depart-costs-paid"></span></td>
+				<td><span class="number-paid"></span></td>
+				<td><span class="costs-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="paid"></span></td>
 			</tr>
 			<tr>
 				<td>Неоплаченные покупки</td>
-				<td><span class="depart-number-not-paid"></span></td>
-				<td><span class="depart-costs-not-paid"></span></td>
+				<td><span class="number-not-paid"></span></td>
+				<td><span class="costs-not-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="not-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Всего покупок</td>
-				<td><span class="depart-number-all"></span></td>
-				<td><span class="depart-costs-all"></span></td>
+				<td><span class="number-all"></span></td>
+				<td><span class="costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="all"></span></td>
 			</tr>
   			<tr>
 				<td>Затраты на отдел</td>
 				<td></td>
-				<td><span class="for-depart-all"></span></td>
+				<td><span class="for-costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="for-all"></span></td>
 			</tr>
 		</tbody>
 	</table>
@@ -157,6 +172,7 @@
 				<th>Категория</th>
 				<th>Покупки</th>
 				<th>Сумма</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -165,18 +181,22 @@
 				<td>Оплаченные покупки</td>
 				<td><span class="number-paid"></span></td>
 				<td><span class="costs-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="paid"></span></td>
 			</tr>
 			<tr>
 				<td>Неоплаченные покупки</td>
 				<td><span class="number-not-paid"></span></td>
 				<td><span class="costs-not-paid"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="not-paid"></span></td>
 			</tr>
 			<tr>
 				<td>Всего покупок</td>
 				<td><span class="number-all"></span></td>
 				<td><span class="costs-all"></span></td>
+				<td><span class="show-graph glyphicon glyphicon-eye-open" data-type="all"></span></td>
 			</tr>
 		</tbody>
 	</table>
   </div><!--end organization-statistics-->
+  {% include "statistics/test-chart.html" %}
 </div>
