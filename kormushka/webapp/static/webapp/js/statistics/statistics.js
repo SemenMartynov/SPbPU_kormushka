@@ -126,7 +126,6 @@ $(document).ready(function () {
                 dataType: "json",
                 data: data,
                 success: function(data) {
-                    console.log(data);
                     $(ctx).find('.show-graph').show();
                     $(ctx).find('.costs-paid').html(data['СostsPaid']);
                     $(ctx).find('.costs-not-paid').html(data['СostsNotPaid']);

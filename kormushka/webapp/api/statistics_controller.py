@@ -42,9 +42,7 @@ def getGraphYear(start_date, end_date,minDelta,purchase):
 
 	return 	{'label':labelsYears,'sum':sumOfYears} 
 
-def getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep):
-	lblMonth = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]
-	lblShortMonth = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
+def getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep,lblShortMonth):
 	sumOfMonths = []
 	labelsMonths = []
 
@@ -72,14 +70,14 @@ def getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep):
 		start_date = start_date + step
 	return {'label':labelsMonths,'sum':sumOfMonths}
 
-def getGraphDay(start_date, end_date,minDelta,purchase,allDelta):
+def getGraphDay(start_date, end_date,minDelta,purchase,allDelta,lblShortMonth):
 	sumOfDays = []
 	labelsDays = []	
 	step = relativedelta(days=1)
 	for i in range (0,allDelta.days+1):
 		date_with_step = start_date + step - minDelta
 		periodSum = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
-		labelsDays.append(start_date.day)
+		labelsDays.append(str(start_date.day) + " " + lblShortMonth[start_date.month-1]) 
 		if not periodSum: periodSum = 0
 		sumOfDays.append(periodSum)
 		start_date = start_date + step
@@ -108,16 +106,17 @@ def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat):
 	minDelta = datetime.timedelta(microseconds=1)
 	args = {}
 	targetDetail = ""
+	lblShortMonth = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
 	if typeDetailStat != "first": detail = getDetail(start_date,end_date,allDelta,deltaStep)
 	#получение выкладки
 	if (allDelta.days >=730 and typeDetailStat == "first") or (typeDetailStat == "year" and detail.get('detailByYears')):
 		sumAll = getGraphYear(start_date, end_date,minDelta,purchase)
 		targetDetail = "detail-stat-year"
 	elif (allDelta.days >32 and allDelta.days < 730 and typeDetailStat == "first") or (typeDetailStat == "month" and detail.get('detailByMonths')):
-		sumAll = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep)
+		sumAll = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep, lblShortMonth)
 		targetDetail = "detail-stat-month"
 	elif (allDelta.days <=32 and typeDetailStat == "first") or (typeDetailStat == "day" and detail.get('detailByDays')):
-		sumAll = getGraphDay(start_date, end_date,minDelta,purchase,allDelta)
+		sumAll = getGraphDay(start_date, end_date,minDelta,purchase,allDelta, lblShortMonth)
 		targetDetail = "detail-stat-day"
 	else:
 		sumAll = {'label':[],'sum':[]}
