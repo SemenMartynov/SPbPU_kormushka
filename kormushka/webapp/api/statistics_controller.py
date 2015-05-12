@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
-from webapp.models import Purchase
+from webapp.models import Purchase,POP
 from loginsys.models import CustomUser
 from django.contrib import auth
 from django.db.models import Sum,Count,Max,Min
@@ -22,7 +22,8 @@ def statistics(request):
 	args.update(csrf(request))
 	return render(request,'statistics/layout.html', args)
 
-def getGraphYear(start_date, end_date,minDelta,purchase):
+def getGraphYear(typeGraph,start_date, end_date,minDelta,pur):
+	purchase = pur.get('purchase')
 	sumOfYears = []
 	labelsYears = []	
 	step = relativedelta(years=1)
@@ -34,15 +35,31 @@ def getGraphYear(start_date, end_date,minDelta,purchase):
 			date_with_step = end_date
 		else:
 			date_with_step = start_date + step - minDelta
-		periodSumYear = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
+
+		#выдача данных по типу статистики
+		if typeGraph == "custom":
+			periodSumYear = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
+		elif typeGraph == "userForAll":
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSumYear = 0
+			for j in obj:
+				periodSumYear = periodSumYear + j.cost/j.amount
+		elif typeGraph == "departForAll":
+			pop = pur.get('pop')
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSumYear = 0
+			for i in obj:
+				kol = pop.filter(purchase=i.pk).count()
+				periodSumYear = periodSumYear + ((i.cost/i.amount)*kol*kol)
 		labelsYears.append(i)
 		if not periodSumYear: periodSumYear = 0
-		sumOfYears.append(periodSumYear)
+		sumOfYears.append(round(periodSumYear,2))
 		start_date = start_date + step
 
 	return 	{'label':labelsYears,'sum':sumOfYears} 
 
-def getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep,lblShortMonth):
+def getGraphMonth(typeGraph,start_date, end_date,minDelta,pur,deltaStep,lblShortMonth):
+	purchase = pur.get('purchase')
 	sumOfMonths = []
 	labelsMonths = []
 
@@ -59,27 +76,54 @@ def getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep,lblShortMonth
 			date_with_step = end_date
 		else:
 			date_with_step = start_date + step - minDelta
-		periodSum = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
-
+		#выдача данных по типу статистики
+		if typeGraph == "custom":
+			periodSum = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
+		elif typeGraph == "userForAll":
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSum = 0
+			for j in obj:
+				periodSum = periodSum + j.cost/j.amount
+		elif typeGraph == "departForAll":
+			pop = pur.get('pop')
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSum = 0
+			for j in obj:
+				kol = pop.filter(purchase=j.pk).count()
+				periodSum = periodSum + ((j.cost/j.amount)*kol*kol)
 		if showShortMonth:
 			labelsMonths.append(lblShortMonth[i%sizePeriod] + "-" + str(start_date.year)[-2:])
 		else:
 			labelsMonths.append(lblMonth[i%sizePeriod])# + " " + str(start_date.year))
 		if not periodSum: periodSum = 0
-		sumOfMonths.append(periodSum)
+		sumOfMonths.append(round(periodSum,2))
 		start_date = start_date + step
 	return {'label':labelsMonths,'sum':sumOfMonths}
 
-def getGraphDay(start_date, end_date,minDelta,purchase,allDelta,lblShortMonth):
+def getGraphDay(typeGraph,start_date, end_date,minDelta,pur,allDelta,lblShortMonth):
+	purchase = pur.get('purchase')
 	sumOfDays = []
 	labelsDays = []	
 	step = relativedelta(days=1)
 	for i in range (0,allDelta.days+1):
 		date_with_step = start_date + step - minDelta
-		periodSum = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
+		if typeGraph == "custom":
+			periodSum = purchase.filter(date__gte=start_date,date__lte=date_with_step).aggregate(sum=Sum('cost'))['sum']
+		elif typeGraph == "userForAll":
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSum = 0
+			for j in obj:
+				periodSum = periodSum + j.cost/j.amount
+		elif typeGraph == "departForAll":
+			pop = pur.get('pop')
+			obj = purchase.filter(date__gte=start_date,date__lte=date_with_step)
+			periodSum = 0
+			for i in obj:
+				kol = pop.filter(purchase=i.pk).count()
+				periodSum = periodSum + ((i.cost/i.amount)*kol*kol)
 		labelsDays.append(str(start_date.day) + " " + lblShortMonth[start_date.month-1]) 
 		if not periodSum: periodSum = 0
-		sumOfDays.append(periodSum)
+		sumOfDays.append(round(periodSum,2))
 		start_date = start_date + step
 	return {'label':labelsDays, 'sum':sumOfDays}
 
@@ -102,7 +146,7 @@ def getDetail(start_date,end_date,allDelta,deltaStep):
 	return {'detailByDays':detailByDays, 'detailByMonths':detailByMonths, 'detailByYears':detailByYears}
 
 #данные для грфика
-def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat):
+def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat,typeGraph):
 	minDelta = datetime.timedelta(microseconds=1)
 	args = {}
 	targetDetail = ""
@@ -110,13 +154,13 @@ def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat):
 	if typeDetailStat != "first": detail = getDetail(start_date,end_date,allDelta,deltaStep)
 	#получение выкладки
 	if (allDelta.days >=730 and typeDetailStat == "first") or (typeDetailStat == "year" and detail.get('detailByYears')):
-		sumAll = getGraphYear(start_date, end_date,minDelta,purchase)
+		sumAll = getGraphYear(typeGraph, start_date, end_date,minDelta,purchase)
 		targetDetail = "detail-stat-year"
 	elif (allDelta.days >32 and allDelta.days < 730 and typeDetailStat == "first") or (typeDetailStat == "month" and detail.get('detailByMonths')):
-		sumAll = getGraphMonth(start_date, end_date,minDelta,purchase,deltaStep, lblShortMonth)
+		sumAll = getGraphMonth(typeGraph, start_date, end_date,minDelta,purchase,deltaStep, lblShortMonth)
 		targetDetail = "detail-stat-month"
 	elif (allDelta.days <=32 and typeDetailStat == "first") or (typeDetailStat == "day" and detail.get('detailByDays')):
-		sumAll = getGraphDay(start_date, end_date,minDelta,purchase,allDelta, lblShortMonth)
+		sumAll = getGraphDay(typeGraph, start_date, end_date,minDelta,purchase,allDelta, lblShortMonth)
 		targetDetail = "detail-stat-day"
 	else:
 		sumAll = {'label':[],'sum':[]}
@@ -133,7 +177,6 @@ def getDataForStat(request):
 		typeStat = request.POST.get('typeStat')
 		typeDetailStat  = request.POST.get('typeDetailStat')
 		ForСostsAll = 0
-
 		if not date1 or not date2: 
 			minMaxDate = pur.aggregate(minDate=Min('date'),maxDate=Max('date'))
 
@@ -151,6 +194,9 @@ def getDataForStat(request):
 		else:
 			end_date = minMaxDate['maxDate']
 
+		allDelta = end_date-start_date
+		deltaStep = relativedelta(end_date, start_date.replace(day = 1))
+
 		#выбор варианта статистики
 		if typeStat == "personal-stat":
 			UserType = request.POST.get('typeUser')
@@ -162,7 +208,7 @@ def getDataForStat(request):
 			purСostsPaid = pur.filter(user=current_user_pk, state=1)					#затраты пользователя, которые оплачены
 			purСostsNotPaid = pur.filter(user=current_user_pk, state=0)					#затраты пользователя, которые не оплачены
 			purСostsAll = pur.filter(user=current_user_pk)
-
+			typeGraph = "userForAll"
 			#Затраты на пользователя
 			obj = pur.annotate(amount=Count('pop__purchase')).filter(pop__user=current_user_pk)
 			ForAllNumber = 0
@@ -170,7 +216,10 @@ def getDataForStat(request):
 				ForСostsAll = ForСostsAll + i.cost/i.amount
 				ForAllNumber = ForAllNumber + 1
 			if not ForСostsAll: ForСostsAll	 = 0
-			args.update({'ForСostsAll':round(ForСostsAll,2),'ForAllNumber':ForAllNumber})
+			resСostsForAll = graph(start_date,end_date,allDelta,deltaStep,{'purchase':obj},typeDetailStat,typeGraph)
+			args.update({'sumOnСostsForAll':resСostsForAll.get('sumOfPeriods'),'labels':resСostsForAll.get('labels'),
+						'ForСostsAll':round(ForСostsAll,2),'ForAllNumber':ForAllNumber})
+
 		elif typeStat == "organization-stat":
 			purСostsPaid = pur.filter(state=1)
 			purСostsNotPaid = pur.filter(state=0)
@@ -180,30 +229,31 @@ def getDataForStat(request):
 			purСostsPaid = pur.filter(depart=departid, state=1)
 			purСostsNotPaid = pur.filter(depart=departid, state=0)
 			purСostsAll = pur.filter(depart=departid)
+			typeGraph = "departForAll"
 			#Затраты на отдел
-			users = CustomUser.objects.filter(pop__depart=departid).distinct()
-			for user in users:
-				obj = pur.annotate(amount=Count('pop__purchase')).filter(pop__user=user.pk,pop__depart=departid)
-				for i in obj:
-					ForСostsAll = ForСostsAll + i.cost/i.amount
+			obj = pur.annotate(amount=Count('pop__purchase')).filter(pop__depart=departid)
+			pop = POP.objects.filter(depart=departid)
+			for i in obj:
+				kol = pop.filter(purchase=i.pk).count()
+				ForСostsAll = ForСostsAll + ((i.cost/i.amount)*kol*kol)
 			if not ForСostsAll: ForСostsAll = 0
-			args.update({'ForСostsAll':round(ForСostsAll,2)})
-		
-		#общие рассчеты статистики
-		allDelta = end_date-start_date
-		deltaStep = relativedelta(end_date, start_date.replace(day = 1))
+			resСostsForAll = graph(start_date,end_date,allDelta,deltaStep,{'purchase':obj,'pop':pop},typeDetailStat,typeGraph)
+			args.update({'sumOnСostsForAll':resСostsForAll.get('sumOfPeriods'),'labels':resСostsForAll.get('labels'),
+						'ForСostsAll':round(ForСostsAll,2)})
 
+		#общие рассчеты статистики
+		typeGraph = "custom"
 		СostsPaid = purСostsPaid.aggregate(sum=Sum('cost'),num=Count('id'))
 		if not СostsPaid['sum']: СostsPaid['sum'] = 0
-		resСostsPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsPaid,typeDetailStat)
+		resСostsPaid = graph(start_date,end_date,allDelta,deltaStep,{'purchase':purСostsPaid},typeDetailStat,typeGraph)
 
 		СostsNotPaid = purСostsNotPaid.aggregate(sum=Sum('cost'),num=Count('id'))					
 		if not СostsNotPaid['sum']: СostsNotPaid['sum'] = 0
-		resСostsNotPaid = graph(start_date,end_date,allDelta,deltaStep,purСostsNotPaid,typeDetailStat)
+		resСostsNotPaid = graph(start_date,end_date,allDelta,deltaStep,{'purchase':purСostsNotPaid},typeDetailStat,typeGraph)
 
 		СostsAll = purСostsAll.aggregate(sum=Sum('cost'),num=Count('id'))		#затраты пользователя за весь период
 		if not СostsAll['sum']: СostsAll['sum'] = 0
-		resСostsAll = graph(start_date,end_date,allDelta,deltaStep,purСostsAll,typeDetailStat)
+		resСostsAll = graph(start_date,end_date,allDelta,deltaStep,{'purchase':purСostsAll},typeDetailStat,typeGraph)
 
 		if start_date > end_date:
 			result = False
