@@ -58,6 +58,7 @@ $(document).ready(function () {
         App.sumOnСostsPaid = data['sumOnСostsPaid'];
         App.sumOnСostsNotPaid = data['sumOnСostsNotPaid'];
         App.sumOnСostsAll = data['sumOnСostsAll'];
+        App.sumOnСostsForAll = data['sumOnСostsForAll'];
         App.labels =  data['labels'];
         App.result = data['result'];
     }
@@ -276,11 +277,13 @@ $(document).ready(function () {
             var type = $(this).attr('data-type');
             var sum = [];
             if (type == "paid"){
-               sum = App.sumOnСostsPaid;
+                sum = App.sumOnСostsPaid;
             }else if(type == "not-paid"){
                 sum = App.sumOnСostsNotPaid;
             }else if(type == "all"){
-               sum = App.sumOnСostsAll;
+                sum = App.sumOnСostsAll;
+            }else if(type == "for-all"){
+                sum = App.sumOnСostsForAll;
             }
             costsLineChart(sum,App.labels,App.result);
         }
