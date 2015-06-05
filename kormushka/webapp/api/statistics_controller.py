@@ -94,7 +94,9 @@ def getGraphMonth(typeGraph,start_date, end_date,minDelta,pur,deltaStep,lblShort
 		if showShortMonth:
 			labelsMonths.append(lblShortMonth[i%sizePeriod] + "-" + str(start_date.year)[-2:])
 		else:
-			labelsMonths.append(lblMonth[i%sizePeriod])# + " " + str(start_date.year))
+			labelsMonths.append(lblShortMonth[i%sizePeriod])# + " " + str(start_date.year))
+		logger = logging.getLogger(__name__)
+		logger.error(showShortMonth)
 		if not periodSum: periodSum = 0
 		sumOfMonths.append(round(periodSum,2))
 		start_date = start_date + step
@@ -153,6 +155,7 @@ def graph(start_date,end_date,allDelta,deltaStep,purchase,typeDetailStat,typeGra
 	lblShortMonth = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"]
 	if typeDetailStat != "first": detail = getDetail(start_date,end_date,allDelta,deltaStep)
 	#получение выкладки
+
 	if (allDelta.days >=730 and typeDetailStat == "first") or (typeDetailStat == "year" and detail.get('detailByYears')):
 		sumAll = getGraphYear(typeGraph, start_date, end_date,minDelta,purchase)
 		targetDetail = "detail-stat-year"
@@ -177,6 +180,7 @@ def getDataForStat(request):
 		typeStat = request.POST.get('typeStat')
 		typeDetailStat  = request.POST.get('typeDetailStat')
 		ForСostsAll = 0
+
 		if not date1 or not date2: 
 			minMaxDate = pur.aggregate(minDate=Min('date'),maxDate=Max('date'))
 
@@ -209,6 +213,7 @@ def getDataForStat(request):
 			purСostsNotPaid = pur.filter(user=current_user_pk, state=0)					#затраты пользователя, которые не оплачены
 			purСostsAll = pur.filter(user=current_user_pk)
 			typeGraph = "userForAll"
+
 			#Затраты на пользователя
 			obj = pur.annotate(amount=Count('pop__purchase')).filter(pop__user=current_user_pk)
 			ForAllNumber = 0
@@ -216,7 +221,9 @@ def getDataForStat(request):
 				ForСostsAll = ForСostsAll + i.cost/i.amount
 				ForAllNumber = ForAllNumber + 1
 			if not ForСostsAll: ForСostsAll	 = 0
+
 			resСostsForAll = graph(start_date,end_date,allDelta,deltaStep,{'purchase':obj},typeDetailStat,typeGraph)
+
 			args.update({'sumOnСostsForAll':resСostsForAll.get('sumOfPeriods'),'labels':resСostsForAll.get('labels'),
 						'ForСostsAll':round(ForСostsAll,2),'ForAllNumber':ForAllNumber})
 
