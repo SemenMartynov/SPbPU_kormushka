@@ -95,8 +95,6 @@ def getGraphMonth(typeGraph,start_date, end_date,minDelta,pur,deltaStep,lblShort
 			labelsMonths.append(lblShortMonth[i%sizePeriod] + "-" + str(start_date.year)[-2:])
 		else:
 			labelsMonths.append(lblShortMonth[i%sizePeriod])# + " " + str(start_date.year))
-		logger = logging.getLogger(__name__)
-		logger.error(showShortMonth)
 		if not periodSum: periodSum = 0
 		sumOfMonths.append(round(periodSum,2))
 		start_date = start_date + step

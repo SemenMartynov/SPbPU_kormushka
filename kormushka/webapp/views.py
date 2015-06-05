@@ -15,7 +15,7 @@ import logging
 #вывод страницы пользоватедя со списком покупок, в которых он участвует
 @login_required(login_url="/login/")
 def index(request):
-	purchase = Purchase.objects.filter(pop__user=request.user.pk)# список покупок, в которых участвует пользователь
+	purchase = Purchase.objects.filter(pop__user=request.user.pk).order_by("date")# список покупок, в которых участвует пользователь
 	depart = PO.objects.filter(user=request.user.pk)
 	category = Category.objects.all()
 	args = {'purchase' : purchase,'title':'kormushka','user':auth.get_user(request),'category':category,'depart':depart}# formadd - форма добавления свернута
